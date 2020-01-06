@@ -1,0 +1,32 @@
+
+-------- begin --------
+avr-gcc (WinAVR 20080610) 4.3.0
+Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Size before:
+pwm16.elf  :
+section    size   addr
+.text       252      0
+.stab       960      0
+.stabstr   1644      0
+Total      2856
+
+
+
+
+Size after:
+pwm16.elf  :
+section    size   addr
+.text       252      0
+.stab       960      0
+.stabstr   1644      0
+Total      2856
+
+
+
+Errors: none
+-------- end --------
+

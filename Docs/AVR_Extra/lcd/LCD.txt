@@ -1,0 +1,44 @@
+Interface LCD with AVR MIcrocontroller
+
+Frequently, an AVR program must interact with the outside world using input and output devices that communicate directly with a human being. One of the most common devices attached to an AVR is an LCD display. Some of the most common LCDs connected to the AVR are 16x2 and 20x2 displays. This means 16 characters per line by 2 lines and 20 characters per line by 2 lines, respectively.
+
+Fortunately, a very popular standard exists which allows us to communicate with the vast majority of LCDs regardless of their manufacturer. The standard is referred to as HD44780U, which refers to the controller chip which receives data from an external source (in this case, the AVR) and communicates directly with the LCD.
+
+LCD Pin descriptions
+
+The LCD discussed in this section has 16 pins. The function of each pin is given in Table.
+
+Pin Symbol I/O            Description
+1        Vss        -        Ground
+2        Vcc        -        +5V Power supply
+3        VEE        -        Power supply to control Contrast
+4        RS        I        RS = 0 to select command register RS = 1 to select data register
+5        R/W        I        R/W = 0 for write, R/W = 1 for read
+6        E        I/O        Enable
+7        DB0        I/O        The 8-bit data bus
+8        DB1        I/O        The 8-bit data bus
+9        DB2        I/O        The 8-bit data bus
+10        DB3        I/O        The 8-bit data bus
+11        DB4        I/O        The 8-bit data bus
+12        DB5        I/O        The 8-bit data bus
+13        DB6        I/O        The 8-bit data bus
+14        DB7        I/O        The 8-bit data bus
+15        LED-        I         +5v for LED backlight
+16        LED+        I       Ground for LED backlight
+
+44780 BACKGROUND
+
+The 44780 standard requires 3 control lines as well as either 4 or 8 I/O lines for the data bus. The user may select whether the LCD is to operate with a 4-bit data bus or an 8-bit data bus. If a 4-bit data bus is used, the LCD will require a total of 7 data lines (3 control lines plus the 4 lines for the data bus). If an 8-bit data bus is used, the LCD will require a total of 11 data lines (3 control lines plus the 8 lines for the data bus).
+
+The three control lines are referred to as EN, RS, and RW.
+
+The EN line is called "Enable." This control line is used to tell the LCD that you are sending it data. To send data to the LCD, your program should first set this line high (1) and then set the other two control lines and/or put data on the data bus. When the other lines are completely ready, bring EN low (0) again. The 1-0 transition tells the 44780 to take the data currently found on the other control lines and on the data bus and to treat it as a command.
+
+The RS line is the "Register Select" line. When RS is low (0), the data is to be treated as a command or special instruction (such as clear screen, position cursor, etc.). When RS is high (1), the data being sent is text data which sould be displayed on the screen. For example, to display the letter "T" on the screen you would set RS high.
+
+The RW line is the "Read/Write" control line. When RW is low (0), the information on the data bus is being written to the LCD. When RW is high (1), the program is effectively querying (or reading) the LCD. Only one instruction ("Get LCD status") is a read command. All others are write commands--so RW will almost always be low.
+
+Finally, the data bus consists of 4 or 8 lines (depending on the mode of operation selected by the user). In the case of an 8-bit data bus, the lines are referred to as DB0, DB1, DB2, DB3, DB4, DB5, DB6, and DB7. 
+ 
+BASCOM supports 4bit interface, so that we need just 6 lines for an LCD interface. They are 4 data lines, 1 EN(Enable) line and RS (Register Select) line.
+

@@ -1,0 +1,17 @@
+Creating   'add_bits.eep'
+Creating   'add_bits.hex'
+Creating   'add_bits.obj'
+Creating   'add_bits.lis'
+Creating   'add_bits.map'
+
+Assembling 'add_bits.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   39 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   39 words
+
+Assembly complete with no errors.
+Deleting   'add_bits.eep'

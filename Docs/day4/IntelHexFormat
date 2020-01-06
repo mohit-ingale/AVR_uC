@@ -1,0 +1,30 @@
+Intel Hex Format
+
+This page describes the format of an Intel hex file produced by a suitable assembler. This code is often downloaded from a PC to a development system and run from RAM. Alternatively, the hex file can be converted to a binary file and programmed into an EPROM.
+
+Here is an example hex file:
+
+:10008000AF5F67F0602703E0322CFA92007780C361
+:1000900089001C6B7EA7CA9200FE10D2AA00477D81
+:0B00A00080FA92006F3600C3A00076CB
+:00000001FF
+
+Now look at the top line...
+
+    * The first character (:) indicates the start of a record.
+    * The next two characters indicate the record length (10h in this case).
+    * The next four characters give the load address (0080h in this case).
+    * The next two characters indicate the record type (see below).
+    * Then we have the actual data.
+    * The last two characters are a checksum (sum of all bytes + checksum = 00). 
+
+The last line of the file is special, and will always look like that above.
+
+Record types:
+
+    * 00 - Data record
+    * 01 - End of file record
+    * 02 - Extended segment address record
+    * 03 - Start segment address record
+    * 04 - Extended linear address record
+    * 05 - Start linear address record 

@@ -1,0 +1,17 @@
+Creating   'addc.eep'
+Creating   'addc.hex'
+Creating   'addc.obj'
+Creating   'addc.lis'
+Creating   'addc.map'
+
+Assembling 'addc.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   21 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   21 words
+
+Assembly complete with no errors.
+Deleting   'addc.eep'

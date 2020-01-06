@@ -1,0 +1,161 @@
+   1               		.file	"int.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  70               	.global	FLAG
+  71               		.data
+  74               	FLAG:
+  75 0000 0100      		.word	1
+  76               		.text
+  78               	.global	__vector_1
+  80               	__vector_1:
+   1:int.c         ****                  // ***********************************************************
+   2:int.c         **** // Project:
+   3:int.c         **** // Author:
+   4:int.c         **** // Module description:
+   5:int.c         **** // ***********************************************************
+   6:int.c         **** 
+   7:int.c         **** #include <avr\io.h>              // Most basic include files
+   8:int.c         **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:int.c         **** #include <avr\signal.h>          // here
+  10:int.c         **** 
+  11:int.c         **** int n,FLAG=1;
+  12:int.c         **** ISR(INT0_vect)
+  13:int.c         **** {
+  81               	stabn	68,0,13,.LM0-.LFBB1
+  82               	.LM0:
+  83               	.LFBB1:
+  84 0000 1F92      		push __zero_reg__
+  85 0002 0F92      		push r0
+  86 0004 0FB6      		in r0,__SREG__
+  87 0006 0F92      		push r0
+  88 0008 1124      		clr __zero_reg__
+  89 000a 8F93      		push r24
+  90 000c 9F93      		push r25
+  91 000e AF93      		push r26
+  92 0010 BF93      		push r27
+  93 0012 EF93      		push r30
+  94 0014 FF93      		push r31
+  95 0016 DF93      		push r29
+  96 0018 CF93      		push r28
+  97 001a CDB7      		in r28,__SP_L__
+  98 001c DEB7      		in r29,__SP_H__
+  99               	/* prologue: Signal */
+ 100               	/* frame size = 0 */
+  14:int.c         ****    PORTD=PORTD^(0B00010000);
+ 101               	-.LFBB1
+ 102               	.LM1:
+ 103 001e A2E3      		ldi r26,lo8(50)
+ 104 0020 B0E0      		ldi r27,hi8(50)
+ 105 0022 E2E3      		ldi r30,lo8(50)
+ 106 0024 F0E0      		ldi r31,hi8(50)
+ 107 0026 9081      		ld r25,Z
+ 108 0028 80E1      		ldi r24,lo8(16)
+ 109 002a 8927      		eor r24,r25
+ 110 002c 8C93      		st X,r24
+ 111               	/* epilogue start */
+  15:int.c         **** }
+ 112               	0,15,.LM2-.LFBB1
+ 113               	.LM2:
+ 114 002e CF91      		pop r28
+ 115 0030 DF91      		pop r29
+ 116 0032 FF91      		pop r31
+ 117 0034 EF91      		pop r30
+ 118 0036 BF91      		pop r27
+ 119 0038 AF91      		pop r26
+ 120 003a 9F91      		pop r25
+ 121 003c 8F91      		pop r24
+ 122 003e 0F90      		pop r0
+ 123 0040 0FBE      		out __SREG__,r0
+ 124 0042 0F90      		pop r0
+ 125 0044 1F90      		pop __zero_reg__
+ 126 0046 1895      		reti
+ 128               	.Lscope1:
+ 130               	.global	main
+ 132               	main:
+  16:int.c         **** 
+  17:int.c         **** 
+  18:int.c         **** 
+  19:int.c         **** void delay(void);
+  20:int.c         **** 
+  21:int.c         **** int main(void)
+  22:int.c         **** {
+ 133               	.LFBB2
+ 134               	.LM3:
+ 135               	.LFBB2:
+ 136 0048 DF93      		push r29
+ 137 004a CF93      		push r28
+ 138 004c CDB7      		in r28,__SP_L__
+ 139 004e DEB7      		in r29,__SP_H__
+ 140               	/* prologue: function */
+ 141               	/* frame size = 0 */
+  23:int.c         **** 	DDRD=(1<<PD4);
+ 142               	8,0,23,.LM4-.LFBB2
+ 143               	.LM4:
+ 144 0050 E1E3      		ldi r30,lo8(49)
+ 145 0052 F0E0      		ldi r31,hi8(49)
+ 146 0054 80E1      		ldi r24,lo8(16)
+ 147 0056 8083      		st Z,r24
+  24:int.c         **** 	PORTD=(1<<PD2);
+ 148               	n	68,0,24,.LM5-.LFBB2
+ 149               	.LM5:
+ 150 0058 E2E3      		ldi r30,lo8(50)
+ 151 005a F0E0      		ldi r31,hi8(50)
+ 152 005c 84E0      		ldi r24,lo8(4)
+ 153 005e 8083      		st Z,r24
+  25:int.c         **** 	MCUCR|=(1<<ISC01);                    //LOGICAL CHANGE
+ 154               	n	68,0,25,.LM6-.LFBB2
+ 155               	.LM6:
+ 156 0060 A5E5      		ldi r26,lo8(85)
+ 157 0062 B0E0      		ldi r27,hi8(85)
+ 158 0064 E5E5      		ldi r30,lo8(85)
+ 159 0066 F0E0      		ldi r31,hi8(85)
+ 160 0068 8081      		ld r24,Z
+ 161 006a 8260      		ori r24,lo8(2)
+ 162 006c 8C93      		st X,r24
+  26:int.c         **** 	GICR|=(1<<INT0);                     //ENABLE LOCAL EXTERNAL INT FLAG                           //
+ 163               	8,0,26,.LM7-.LFBB2
+ 164               	.LM7:
+ 165 006e ABE5      		ldi r26,lo8(91)
+ 166 0070 B0E0      		ldi r27,hi8(91)
+ 167 0072 EBE5      		ldi r30,lo8(91)
+ 168 0074 F0E0      		ldi r31,hi8(91)
+ 169 0076 8081      		ld r24,Z
+ 170 0078 8064      		ori r24,lo8(64)
+ 171 007a 8C93      		st X,r24
+  27:int.c         **** 	sei();                                        // ENABLE GLOBAL INT
+ 172               	8(64)
+ 173               		st X,r24
+ 175               	.LM8:
+ 176 007c 7894      	/* #APP */
+ 177               	 ;  27 "int.c" 1
+ 178               		sei
+ 179               	 ;  0 "" 2
+ 180 007e 00C0      	/* #NOAPP */
+ 181               	.L4:
+ 182               		rjmp .L4
+ 184               	.Lscope2:
+ 185               		.comm n,2,1
+DEFINED SYMBOLS
+                            *ABS*:00000000 int.c
+C:\users\cdac1\Temp/ccxaJq91.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccxaJq91.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccxaJq91.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccxaJq91.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccxaJq91.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccxaJq91.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccxaJq91.s:74     .data:00000000 FLAG
+C:\users\cdac1\Temp/ccxaJq91.s:80     .text:00000000 __vector_1
+C:\users\cdac1\Temp/ccxaJq91.s:132    .text:00000048 main
+                            *COM*:00000002 n
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

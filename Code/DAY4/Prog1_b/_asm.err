@@ -1,0 +1,17 @@
+Creating   'led_asm.eep'
+Creating   'led_asm.hex'
+Creating   'led_asm.obj'
+Creating   'led_asm.lis'
+Creating   'led_asm.map'
+
+Assembling 'led_asm.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   49 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   49 words
+
+Assembly complete with no errors.
+Deleting   'led_asm.eep'

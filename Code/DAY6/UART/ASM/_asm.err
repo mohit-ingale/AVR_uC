@@ -1,0 +1,17 @@
+Creating   'uart_asm.eep'
+Creating   'uart_asm.hex'
+Creating   'uart_asm.obj'
+Creating   'uart_asm.lis'
+Creating   'uart_asm.map'
+
+Assembling 'uart_asm.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   42 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   42 words
+
+Assembly complete with no errors.
+Deleting   'uart_asm.eep'

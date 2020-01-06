@@ -1,0 +1,17 @@
+Creating   'div.eep'
+Creating   'div.hex'
+Creating   'div.obj'
+Creating   'div.lis'
+Creating   'div.map'
+
+Assembling 'div.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   30 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   30 words
+
+Assembly complete with no errors.
+Deleting   'div.eep'

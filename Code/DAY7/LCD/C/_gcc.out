@@ -1,0 +1,72 @@
+set -e; avr-gcc -MM -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=lcd_c.lst   lcd_c.c \
+	| sed 's,\(.*\)\.o[ :]*,\1.o \1.d : ,g' > lcd_c.d; \
+	[ -s lcd_c.d ] || rm -f lcd_c.d
+
+-------- begin --------
+avr-gcc (WinAVR 20080610) 4.3.0
+Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Size before:
+lcd_c.elf  :
+section    size      addr
+.text       688         0
+.data         2   8388704
+.bss          2   8388706
+.stab      1620         0
+.stabstr   1768         0
+Total      4080
+
+
+
+
+Compiling: lcd_c.c
+avr-gcc -c -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=lcd_c.lst   lcd_c.c -o lcd_c.o
+In file included from lcd_c.c:9:
+c:/winavr/lib/gcc/../../avr/include/avr\signal.h:36:2: warning: #warning "This header file is obsolete.  Use <avr/interrupt.h>."
+
+Linking: lcd_c.elf
+avr-gcc -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=lcd_c.o   lcd_c.o  --output lcd_c.elf -lm -Wl,-Map=lcd_c.map -Wl,--cref
+
+Creating load file for Flash: lcd_c.hex
+avr-objcopy -O ihex -R .eeprom lcd_c.elf lcd_c.hex
+
+Creating load file for EEPROM: lcd_c.eep
+avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	--change-section-lma .eeprom=0 -O ihex lcd_c.elf lcd_c.eep
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom=0x00000000 never used
+
+Creating Extended Listing: lcd_c.lss
+avr-objdump -h -S lcd_c.elf > lcd_c.lss
+
+Creating Symbol Table: lcd_c.sym
+avr-nm -n lcd_c.elf > lcd_c.sym
+
+Converting to AVR COFF: lcd_c.cof
+avr-objcopy --debugging --change-section-address .data-0x800000 --change-section-address .bss-0x800000 --change-section-address .noinit-0x800000 --change-section-address .eeprom-0x810000 -O coff-ext-avr lcd_c.elf lcd_c.cof   # Extended COFF. Supported in VMLAB from rel. 3.10
+Discarding local symbol outside any compilation unit: .do_copy_data_start
+Discarding local symbol outside any compilation unit: .do_copy_data_loop
+Discarding local symbol outside any compilation unit: .do_clear_bss_start
+Discarding local symbol outside any compilation unit: .do_clear_bss_loop
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .noinit+0xff800000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .noinit+0xff800000 never used
+
+Size after:
+lcd_c.elf  :
+section    size      addr
+.text       688         0
+.data         6   8388704
+.bss          2   8388710
+.stab      1620         0
+.stabstr   1768         0
+Total      4084
+
+
+
+Errors: none
+-------- end --------
+

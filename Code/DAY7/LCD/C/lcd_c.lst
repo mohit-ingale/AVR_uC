@@ -1,0 +1,600 @@
+   1               		.file	"lcd_c.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_8
+  73               	__vector_8:
+   1:lcd_c.c       **** // ****stri*******************************************************
+   2:lcd_c.c       **** // Project:
+   3:lcd_c.c       **** // Author:
+   4:lcd_c.c       **** // Module description:
+   5:lcd_c.c       **** // ***********************************************************
+   6:lcd_c.c       **** 
+   7:lcd_c.c       **** #include <avr\io.h>              // Most basic include files
+   8:lcd_c.c       **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:lcd_c.c       **** #include <avr\signal.h>          // here
+  10:lcd_c.c       **** 
+  11:lcd_c.c       **** int n;
+  12:lcd_c.c       **** 
+  13:lcd_c.c       **** ISR(TIMER1_OVF_vect)
+  14:lcd_c.c       **** {
+  74               	4,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a DF93      		push r29
+  83 000c CF93      		push r28
+  84 000e CDB7      		in r28,__SP_L__
+  85 0010 DEB7      		in r29,__SP_H__
+  86               	/* prologue: Signal */
+  87               	/* frame size = 0 */
+  15:lcd_c.c       **** 	n=0;
+  88               	5,.LM1-.LFBB1
+  89               	.LM1:
+  90 0012 1092 0000 		sts (n)+1,__zero_reg__
+  91 0016 1092 0000 		sts n,__zero_reg__
+  92               	/* epilogue start */
+  16:lcd_c.c       **** }
+  93               	bn	68,0,16,.LM2-.LFBB1
+  94               	.LM2:
+  95 001a CF91      		pop r28
+  96 001c DF91      		pop r29
+  97 001e 0F90      		pop r0
+  98 0020 0FBE      		out __SREG__,r0
+  99 0022 0F90      		pop r0
+ 100 0024 1F90      		pop __zero_reg__
+ 101 0026 1895      		reti
+ 103               	.Lscope1:
+ 104               		.data
+ 105               	.LC0:
+ 106 0000 4845 4C4C 		.string	"HELLO"
+ 106      4F00 
+ 107               		.text
+ 109               	.global	main
+ 111               	main:
+  17:lcd_c.c       **** void delay(unsigned int);
+  18:lcd_c.c       **** void lcd_string(char *str);
+  19:lcd_c.c       **** void lcd_init(void);
+  20:lcd_c.c       **** void lcd_cmd(unsigned char);
+  21:lcd_c.c       **** void lcd_data(unsigned char);
+  22:lcd_c.c       **** 
+  23:lcd_c.c       **** int main(void)
+  24:lcd_c.c       **** {
+ 112               	3-.LFBB2
+ 113               	.LM3:
+ 114               	.LFBB2:
+ 115 0028 DF93      		push r29
+ 116 002a CF93      		push r28
+ 117 002c CDB7      		in r28,__SP_L__
+ 118 002e DEB7      		in r29,__SP_H__
+ 119               	/* prologue: function */
+ 120               	/* frame size = 0 */
+  25:lcd_c.c       **** 	DDRD=0XFF;
+ 121               	8,0,25,.LM4-.LFBB2
+ 122               	.LM4:
+ 123 0030 E1E3      		ldi r30,lo8(49)
+ 124 0032 F0E0      		ldi r31,hi8(49)
+ 125 0034 8FEF      		ldi r24,lo8(-1)
+ 126 0036 8083      		st Z,r24
+  26:lcd_c.c       **** 	DDRB=0XFF;
+ 127               	n	68,0,26,.LM5-.LFBB2
+ 128               	.LM5:
+ 129 0038 E7E3      		ldi r30,lo8(55)
+ 130 003a F0E0      		ldi r31,hi8(55)
+ 131 003c 8FEF      		ldi r24,lo8(-1)
+ 132 003e 8083      		st Z,r24
+  27:lcd_c.c       **** 	PORTB|=(1<<PB1);
+ 133               	n	68,0,27,.LM6-.LFBB2
+ 134               	.LM6:
+ 135 0040 A8E3      		ldi r26,lo8(56)
+ 136 0042 B0E0      		ldi r27,hi8(56)
+ 137 0044 E8E3      		ldi r30,lo8(56)
+ 138 0046 F0E0      		ldi r31,hi8(56)
+ 139 0048 8081      		ld r24,Z
+ 140 004a 8260      		ori r24,lo8(2)
+ 141 004c 8C93      		st X,r24
+  28:lcd_c.c       **** 	TIMSK|=(1<<TOIE1);
+ 142               	8,0,28,.LM7-.LFBB2
+ 143               	.LM7:
+ 144 004e A9E5      		ldi r26,lo8(89)
+ 145 0050 B0E0      		ldi r27,hi8(89)
+ 146 0052 E9E5      		ldi r30,lo8(89)
+ 147 0054 F0E0      		ldi r31,hi8(89)
+ 148 0056 8081      		ld r24,Z
+ 149 0058 8460      		ori r24,lo8(4)
+ 150 005a 8C93      		st X,r24
+  29:lcd_c.c       **** 	sei();
+ 151               	8,0,29,.LM8-.LFBB2
+ 152               	.LM8:
+ 153               	/* #APP */
+ 154               	 ;  29 "lcd_c.c" 1
+ 155 005c 7894      		sei
+ 156               	 ;  0 "" 2
+  30:lcd_c.c       **** 	lcd_init();
+ 157               	n	68,0,30,.LM9-.LFBB2
+ 158               	.LM9:
+ 159               	/* #NOAPP */
+ 160 005e 00D0      		rcall lcd_init
+  31:lcd_c.c       **** 	//lcd_data('a');
+  32:lcd_c.c       **** 	lcd_string("HELLO");
+ 161               	abn	68,0,32,.LM10-.LFBB2
+ 162               	.LM10:
+ 163 0060 80E0      		ldi r24,lo8(.LC0)
+ 164 0062 90E0      		ldi r25,hi8(.LC0)
+ 165 0064 00D0      		rcall lcd_string
+ 166               	.L4:
+ 167 0066 00C0      		rjmp .L4
+ 169               	.Lscope2:
+ 171               	.global	lcd_init
+ 173               	lcd_init:
+  33:lcd_c.c       **** 	while(1);	
+  34:lcd_c.c       **** 	
+  35:lcd_c.c       **** }
+  36:lcd_c.c       **** 
+  37:lcd_c.c       **** void lcd_init(void)
+  38:lcd_c.c       **** {
+ 174               	38,.LM11-.LFBB3
+ 175               	.LM11:
+ 176               	.LFBB3:
+ 177 0068 DF93      		push r29
+ 178 006a CF93      		push r28
+ 179 006c CDB7      		in r28,__SP_L__
+ 180 006e DEB7      		in r29,__SP_H__
+ 181               	/* prologue: function */
+ 182               	/* frame size = 0 */
+  39:lcd_c.c       **** 	delay(16);
+ 183               	8,0,39,.LM12-.LFBB3
+ 184               	.LM12:
+ 185 0070 80E1      		ldi r24,lo8(16)
+ 186 0072 90E0      		ldi r25,hi8(16)
+ 187 0074 00D0      		rcall delay
+  40:lcd_c.c       **** 	lcd_cmd(0x33);
+ 188               	bn	68,0,40,.LM13-.LFBB3
+ 189               	.LM13:
+ 190 0076 83E3      		ldi r24,lo8(51)
+ 191 0078 00D0      		rcall lcd_cmd
+  41:lcd_c.c       **** 	lcd_cmd(0x32);
+ 192               	abn	68,0,41,.LM14-.LFBB3
+ 193               	.LM14:
+ 194 007a 82E3      		ldi r24,lo8(50)
+ 195 007c 00D0      		rcall lcd_cmd
+  42:lcd_c.c       **** 	lcd_cmd(0x28);
+ 196               	abn	68,0,42,.LM15-.LFBB3
+ 197               	.LM15:
+ 198 007e 88E2      		ldi r24,lo8(40)
+ 199 0080 00D0      		rcall lcd_cmd
+  43:lcd_c.c       **** 	lcd_cmd(0x01);
+ 200               	abn	68,0,43,.LM16-.LFBB3
+ 201               	.LM16:
+ 202 0082 81E0      		ldi r24,lo8(1)
+ 203 0084 00D0      		rcall lcd_cmd
+  44:lcd_c.c       **** 	lcd_cmd(0x0e);
+ 204               	abn	68,0,44,.LM17-.LFBB3
+ 205               	.LM17:
+ 206 0086 8EE0      		ldi r24,lo8(14)
+ 207 0088 00D0      		rcall lcd_cmd
+  45:lcd_c.c       **** 	delay(10);
+ 208               	abn	68,0,45,.LM18-.LFBB3
+ 209               	.LM18:
+ 210 008a 8AE0      		ldi r24,lo8(10)
+ 211 008c 90E0      		ldi r25,hi8(10)
+ 212 008e 00D0      		rcall delay
+ 213               	/* epilogue start */
+  46:lcd_c.c       **** 	
+  47:lcd_c.c       **** }
+ 214               	n	68,0,47,.LM19-.LFBB3
+ 215               	.LM19:
+ 216 0090 CF91      		pop r28
+ 217 0092 DF91      		pop r29
+ 218 0094 0895      		ret
+ 220               	.Lscope3:
+ 223               	.global	lcd_string
+ 225               	lcd_string:
+  48:lcd_c.c       **** 
+  49:lcd_c.c       **** void lcd_string(char *str)
+  50:lcd_c.c       **** {
+ 226               	,50,.LM20-.LFBB4
+ 227               	.LM20:
+ 228               	.LFBB4:
+ 229 0096 DF93      		push r29
+ 230 0098 CF93      		push r28
+ 231 009a 00D0      		rcall .
+ 232 009c CDB7      		in r28,__SP_L__
+ 233 009e DEB7      		in r29,__SP_H__
+ 234               	/* prologue: function */
+ 235               	/* frame size = 2 */
+ 236 00a0 9A83      		std Y+2,r25
+ 237 00a2 8983      		std Y+1,r24
+ 238 00a4 00C0      		rjmp .L9
+ 239               	.L10:
+  51:lcd_c.c       **** 	while(*str)
+  52:lcd_c.c       **** 	{
+  53:lcd_c.c       **** 		lcd_data(*str);
+ 240               	3,.LM21-.LFBB4
+ 241               	.LM21:
+ 242 00a6 E981      		ldd r30,Y+1
+ 243 00a8 FA81      		ldd r31,Y+2
+ 244 00aa 8081      		ld r24,Z
+ 245 00ac 00D0      		rcall lcd_data
+  54:lcd_c.c       **** 		str++;
+ 246               	n	68,0,54,.LM22-.LFBB4
+ 247               	.LM22:
+ 248 00ae 8981      		ldd r24,Y+1
+ 249 00b0 9A81      		ldd r25,Y+2
+ 250 00b2 0196      		adiw r24,1
+ 251 00b4 9A83      		std Y+2,r25
+ 252 00b6 8983      		std Y+1,r24
+ 253               	.L9:
+ 255               	.LM23:
+ 256 00b8 E981      		ldd r30,Y+1
+ 257 00ba FA81      		ldd r31,Y+2
+ 258 00bc 8081      		ld r24,Z
+ 259 00be 8823      		tst r24
+ 260 00c0 01F4      		brne .L10
+ 261               	/* epilogue start */
+  55:lcd_c.c       **** 	}
+  56:lcd_c.c       **** }
+ 262               	.LM24-.LFBB4
+ 263               	.LM24:
+ 264 00c2 0F90      		pop __tmp_reg__
+ 265 00c4 0F90      		pop __tmp_reg__
+ 266 00c6 CF91      		pop r28
+ 267 00c8 DF91      		pop r29
+ 268 00ca 0895      		ret
+ 270               	.Lscope4:
+ 273               	.global	lcd_cmd
+ 275               	lcd_cmd:
+  57:lcd_c.c       **** void lcd_cmd(unsigned char data)
+  58:lcd_c.c       **** {
+ 276               	8,.LM25-.LFBB5
+ 277               	.LM25:
+ 278               	.LFBB5:
+ 279 00cc DF93      		push r29
+ 280 00ce CF93      		push r28
+ 281 00d0 0F92      		push __tmp_reg__
+ 282 00d2 CDB7      		in r28,__SP_L__
+ 283 00d4 DEB7      		in r29,__SP_H__
+ 284               	/* prologue: function */
+ 285               	/* frame size = 1 */
+ 286 00d6 8983      		std Y+1,r24
+  59:lcd_c.c       **** 	PORTD=(data&0xf0);
+ 287               	0,59,.LM26-.LFBB5
+ 288               	.LM26:
+ 289 00d8 E2E3      		ldi r30,lo8(50)
+ 290 00da F0E0      		ldi r31,hi8(50)
+ 291 00dc 8981      		ldd r24,Y+1
+ 292 00de 807F      		andi r24,lo8(-16)
+ 293 00e0 8083      		st Z,r24
+  60:lcd_c.c       **** 	PORTB&=~(1<<PB3);
+ 294               		68,0,60,.LM27-.LFBB5
+ 295               	.LM27:
+ 296 00e2 A8E3      		ldi r26,lo8(56)
+ 297 00e4 B0E0      		ldi r27,hi8(56)
+ 298 00e6 E8E3      		ldi r30,lo8(56)
+ 299 00e8 F0E0      		ldi r31,hi8(56)
+ 300 00ea 8081      		ld r24,Z
+ 301 00ec 877F      		andi r24,lo8(-9)
+ 302 00ee 8C93      		st X,r24
+  61:lcd_c.c       **** 	PORTB|=(1<<PB4);
+ 303               	8,0,61,.LM28-.LFBB5
+ 304               	.LM28:
+ 305 00f0 A8E3      		ldi r26,lo8(56)
+ 306 00f2 B0E0      		ldi r27,hi8(56)
+ 307 00f4 E8E3      		ldi r30,lo8(56)
+ 308 00f6 F0E0      		ldi r31,hi8(56)
+ 309 00f8 8081      		ld r24,Z
+ 310 00fa 8061      		ori r24,lo8(16)
+ 311 00fc 8C93      		st X,r24
+  62:lcd_c.c       **** 	delay(1);
+ 312               	8,0,62,.LM29-.LFBB5
+ 313               	.LM29:
+ 314 00fe 81E0      		ldi r24,lo8(1)
+ 315 0100 90E0      		ldi r25,hi8(1)
+ 316 0102 00D0      		rcall delay
+  63:lcd_c.c       **** 	PORTB&=~(1<<PB4);
+ 317               	bn	68,0,63,.LM30-.LFBB5
+ 318               	.LM30:
+ 319 0104 A8E3      		ldi r26,lo8(56)
+ 320 0106 B0E0      		ldi r27,hi8(56)
+ 321 0108 E8E3      		ldi r30,lo8(56)
+ 322 010a F0E0      		ldi r31,hi8(56)
+ 323 010c 8081      		ld r24,Z
+ 324 010e 8F7E      		andi r24,lo8(-17)
+ 325 0110 8C93      		st X,r24
+  64:lcd_c.c       **** 	delay(2);
+ 326               	8,0,64,.LM31-.LFBB5
+ 327               	.LM31:
+ 328 0112 82E0      		ldi r24,lo8(2)
+ 329 0114 90E0      		ldi r25,hi8(2)
+ 330 0116 00D0      		rcall delay
+  65:lcd_c.c       **** 	PORTD=(data<<4);
+ 331               	bn	68,0,65,.LM32-.LFBB5
+ 332               	.LM32:
+ 333 0118 E2E3      		ldi r30,lo8(50)
+ 334 011a F0E0      		ldi r31,hi8(50)
+ 335 011c 8981      		ldd r24,Y+1
+ 336 011e 8295      		swap r24
+ 337 0120 807F      		andi r24,lo8(-16)
+ 338 0122 8083      		st Z,r24
+  66:lcd_c.c       **** 	PORTB|=(1<<PB4);
+ 339               	68,0,66,.LM33-.LFBB5
+ 340               	.LM33:
+ 341 0124 A8E3      		ldi r26,lo8(56)
+ 342 0126 B0E0      		ldi r27,hi8(56)
+ 343 0128 E8E3      		ldi r30,lo8(56)
+ 344 012a F0E0      		ldi r31,hi8(56)
+ 345 012c 8081      		ld r24,Z
+ 346 012e 8061      		ori r24,lo8(16)
+ 347 0130 8C93      		st X,r24
+  67:lcd_c.c       **** 	delay(1);
+ 348               	8,0,67,.LM34-.LFBB5
+ 349               	.LM34:
+ 350 0132 81E0      		ldi r24,lo8(1)
+ 351 0134 90E0      		ldi r25,hi8(1)
+ 352 0136 00D0      		rcall delay
+  68:lcd_c.c       **** 	PORTB&=~(1<<PB4);
+ 353               	bn	68,0,68,.LM35-.LFBB5
+ 354               	.LM35:
+ 355 0138 A8E3      		ldi r26,lo8(56)
+ 356 013a B0E0      		ldi r27,hi8(56)
+ 357 013c E8E3      		ldi r30,lo8(56)
+ 358 013e F0E0      		ldi r31,hi8(56)
+ 359 0140 8081      		ld r24,Z
+ 360 0142 8F7E      		andi r24,lo8(-17)
+ 361 0144 8C93      		st X,r24
+  69:lcd_c.c       **** 	delay(2);	
+ 362               	8,0,69,.LM36-.LFBB5
+ 363               	.LM36:
+ 364 0146 82E0      		ldi r24,lo8(2)
+ 365 0148 90E0      		ldi r25,hi8(2)
+ 366 014a 00D0      		rcall delay
+ 367               	/* epilogue start */
+  70:lcd_c.c       **** }
+ 368               	n	68,0,70,.LM37-.LFBB5
+ 369               	.LM37:
+ 370 014c 0F90      		pop __tmp_reg__
+ 371 014e CF91      		pop r28
+ 372 0150 DF91      		pop r29
+ 373 0152 0895      		ret
+ 375               	.Lscope5:
+ 378               	.global	lcd_data
+ 380               	lcd_data:
+  71:lcd_c.c       **** 
+  72:lcd_c.c       **** void lcd_data(unsigned char data)
+  73:lcd_c.c       **** {
+ 381               	73,.LM38-.LFBB6
+ 382               	.LM38:
+ 383               	.LFBB6:
+ 384 0154 DF93      		push r29
+ 385 0156 CF93      		push r28
+ 386 0158 0F92      		push __tmp_reg__
+ 387 015a CDB7      		in r28,__SP_L__
+ 388 015c DEB7      		in r29,__SP_H__
+ 389               	/* prologue: function */
+ 390               	/* frame size = 1 */
+ 391 015e 8983      		std Y+1,r24
+  74:lcd_c.c       **** 	PORTD=(data&0xf0);
+ 392               	0,74,.LM39-.LFBB6
+ 393               	.LM39:
+ 394 0160 E2E3      		ldi r30,lo8(50)
+ 395 0162 F0E0      		ldi r31,hi8(50)
+ 396 0164 8981      		ldd r24,Y+1
+ 397 0166 807F      		andi r24,lo8(-16)
+ 398 0168 8083      		st Z,r24
+  75:lcd_c.c       **** 	PORTB|=(1<<PB5);
+ 399               		68,0,75,.LM40-.LFBB6
+ 400               	.LM40:
+ 401 016a A8E3      		ldi r26,lo8(56)
+ 402 016c B0E0      		ldi r27,hi8(56)
+ 403 016e E8E3      		ldi r30,lo8(56)
+ 404 0170 F0E0      		ldi r31,hi8(56)
+ 405 0172 8081      		ld r24,Z
+ 406 0174 8062      		ori r24,lo8(32)
+ 407 0176 8C93      		st X,r24
+  76:lcd_c.c       **** 	PORTB|=(1<<PB4);
+ 408               	8,0,76,.LM41-.LFBB6
+ 409               	.LM41:
+ 410 0178 A8E3      		ldi r26,lo8(56)
+ 411 017a B0E0      		ldi r27,hi8(56)
+ 412 017c E8E3      		ldi r30,lo8(56)
+ 413 017e F0E0      		ldi r31,hi8(56)
+ 414 0180 8081      		ld r24,Z
+ 415 0182 8061      		ori r24,lo8(16)
+ 416 0184 8C93      		st X,r24
+  77:lcd_c.c       **** 	delay(1);
+ 417               	8,0,77,.LM42-.LFBB6
+ 418               	.LM42:
+ 419 0186 81E0      		ldi r24,lo8(1)
+ 420 0188 90E0      		ldi r25,hi8(1)
+ 421 018a 00D0      		rcall delay
+  78:lcd_c.c       **** 	PORTB&=~(1<<PB4);
+ 422               	bn	68,0,78,.LM43-.LFBB6
+ 423               	.LM43:
+ 424 018c A8E3      		ldi r26,lo8(56)
+ 425 018e B0E0      		ldi r27,hi8(56)
+ 426 0190 E8E3      		ldi r30,lo8(56)
+ 427 0192 F0E0      		ldi r31,hi8(56)
+ 428 0194 8081      		ld r24,Z
+ 429 0196 8F7E      		andi r24,lo8(-17)
+ 430 0198 8C93      		st X,r24
+  79:lcd_c.c       **** 	delay(2);
+ 431               	8,0,79,.LM44-.LFBB6
+ 432               	.LM44:
+ 433 019a 82E0      		ldi r24,lo8(2)
+ 434 019c 90E0      		ldi r25,hi8(2)
+ 435 019e 00D0      		rcall delay
+  80:lcd_c.c       **** 	PORTD=(data<<4);
+ 436               	bn	68,0,80,.LM45-.LFBB6
+ 437               	.LM45:
+ 438 01a0 E2E3      		ldi r30,lo8(50)
+ 439 01a2 F0E0      		ldi r31,hi8(50)
+ 440 01a4 8981      		ldd r24,Y+1
+ 441 01a6 8295      		swap r24
+ 442 01a8 807F      		andi r24,lo8(-16)
+ 443 01aa 8083      		st Z,r24
+  81:lcd_c.c       **** 	PORTB|=(1<<PB4);
+ 444               	68,0,81,.LM46-.LFBB6
+ 445               	.LM46:
+ 446 01ac A8E3      		ldi r26,lo8(56)
+ 447 01ae B0E0      		ldi r27,hi8(56)
+ 448 01b0 E8E3      		ldi r30,lo8(56)
+ 449 01b2 F0E0      		ldi r31,hi8(56)
+ 450 01b4 8081      		ld r24,Z
+ 451 01b6 8061      		ori r24,lo8(16)
+ 452 01b8 8C93      		st X,r24
+  82:lcd_c.c       **** 	delay(1);
+ 453               	8,0,82,.LM47-.LFBB6
+ 454               	.LM47:
+ 455 01ba 81E0      		ldi r24,lo8(1)
+ 456 01bc 90E0      		ldi r25,hi8(1)
+ 457 01be 00D0      		rcall delay
+  83:lcd_c.c       **** 	PORTB&=~(1<<PB4);
+ 458               	bn	68,0,83,.LM48-.LFBB6
+ 459               	.LM48:
+ 460 01c0 A8E3      		ldi r26,lo8(56)
+ 461 01c2 B0E0      		ldi r27,hi8(56)
+ 462 01c4 E8E3      		ldi r30,lo8(56)
+ 463 01c6 F0E0      		ldi r31,hi8(56)
+ 464 01c8 8081      		ld r24,Z
+ 465 01ca 8F7E      		andi r24,lo8(-17)
+ 466 01cc 8C93      		st X,r24
+  84:lcd_c.c       **** 	delay(2);	
+ 467               	8,0,84,.LM49-.LFBB6
+ 468               	.LM49:
+ 469 01ce 82E0      		ldi r24,lo8(2)
+ 470 01d0 90E0      		ldi r25,hi8(2)
+ 471 01d2 00D0      		rcall delay
+ 472               	/* epilogue start */
+  85:lcd_c.c       **** }
+ 473               	n	68,0,85,.LM50-.LFBB6
+ 474               	.LM50:
+ 475 01d4 0F90      		pop __tmp_reg__
+ 476 01d6 CF91      		pop r28
+ 477 01d8 DF91      		pop r29
+ 478 01da 0895      		ret
+ 480               	.Lscope6:
+ 483               	.global	delay
+ 485               	delay:
+  86:lcd_c.c       **** 
+  87:lcd_c.c       **** void delay(unsigned int cnt)
+  88:lcd_c.c       **** {
+ 486               	88,.LM51-.LFBB7
+ 487               	.LM51:
+ 488               	.LFBB7:
+ 489 01dc DF93      		push r29
+ 490 01de CF93      		push r28
+ 491 01e0 00D0      		rcall .
+ 492 01e2 00D0      		rcall .
+ 493 01e4 CDB7      		in r28,__SP_L__
+ 494 01e6 DEB7      		in r29,__SP_H__
+ 495               	/* prologue: function */
+ 496               	/* frame size = 4 */
+ 497 01e8 9C83      		std Y+4,r25
+ 498 01ea 8B83      		std Y+3,r24
+  89:lcd_c.c       **** 	int i;
+  90:lcd_c.c       **** 	for(i=0;i<cnt;i++)
+ 499               	90,.LM52-.LFBB7
+ 500               	.LM52:
+ 501 01ec 1A82      		std Y+2,__zero_reg__
+ 502 01ee 1982      		std Y+1,__zero_reg__
+ 503 01f0 00C0      		rjmp .L17
+ 504               	.L19:
+  91:lcd_c.c       **** 	{  n=1;
+ 505               	n	68,0,91,.LM53-.LFBB7
+ 506               	.LM53:
+ 507 01f2 81E0      		ldi r24,lo8(1)
+ 508 01f4 90E0      		ldi r25,hi8(1)
+ 509 01f6 9093 0000 		sts (n)+1,r25
+ 510 01fa 8093 0000 		sts n,r24
+  92:lcd_c.c       **** 		TCNT1H=0XFF;
+ 511               	n	68,0,92,.LM54-.LFBB7
+ 512               	.LM54:
+ 513 01fe EDE4      		ldi r30,lo8(77)
+ 514 0200 F0E0      		ldi r31,hi8(77)
+ 515 0202 8FEF      		ldi r24,lo8(-1)
+ 516 0204 8083      		st Z,r24
+  93:lcd_c.c       **** 		TCNT1L=0X84;
+ 517               	n	68,0,93,.LM55-.LFBB7
+ 518               	.LM55:
+ 519 0206 ECE4      		ldi r30,lo8(76)
+ 520 0208 F0E0      		ldi r31,hi8(76)
+ 521 020a 84E8      		ldi r24,lo8(-124)
+ 522 020c 8083      		st Z,r24
+  94:lcd_c.c       **** 		TCCR1B|=(1<<CS10)|(1<<CS11);
+ 523               	n	68,0,94,.LM56-.LFBB7
+ 524               	.LM56:
+ 525 020e AEE4      		ldi r26,lo8(78)
+ 526 0210 B0E0      		ldi r27,hi8(78)
+ 527 0212 EEE4      		ldi r30,lo8(78)
+ 528 0214 F0E0      		ldi r31,hi8(78)
+ 529 0216 8081      		ld r24,Z
+ 530 0218 8360      		ori r24,lo8(3)
+ 531 021a 8C93      		st X,r24
+ 532               	.L18:
+  95:lcd_c.c       **** 		while(n);
+ 533               	,0,95,.LM57-.LFBB7
+ 534               	.LM57:
+ 535 021c 8091 0000 		lds r24,n
+ 536 0220 9091 0000 		lds r25,(n)+1
+ 537 0224 0097      		sbiw r24,0
+ 538 0226 01F4      		brne .L18
+ 540               	.LM58:
+ 541 0228 8981      		ldd r24,Y+1
+ 542 022a 9A81      		ldd r25,Y+2
+ 543 022c 0196      		adiw r24,1
+ 544 022e 9A83      		std Y+2,r25
+ 545 0230 8983      		std Y+1,r24
+ 546               	.L17:
+ 547 0232 2981      		ldd r18,Y+1
+ 548 0234 3A81      		ldd r19,Y+2
+ 549 0236 8B81      		ldd r24,Y+3
+ 550 0238 9C81      		ldd r25,Y+4
+ 551 023a 2817      		cp r18,r24
+ 552 023c 3907      		cpc r19,r25
+ 553 023e 00F0      		brlo .L19
+ 554               	/* epilogue start */
+  96:lcd_c.c       **** 	}
+  97:lcd_c.c       **** }
+ 555               	.LFBB7
+ 556               	.LM59:
+ 557 0240 0F90      		pop __tmp_reg__
+ 558 0242 0F90      		pop __tmp_reg__
+ 559 0244 0F90      		pop __tmp_reg__
+ 560 0246 0F90      		pop __tmp_reg__
+ 561 0248 CF91      		pop r28
+ 562 024a DF91      		pop r29
+ 563 024c 0895      		ret
+ 568               	.Lscope7:
+ 569               		.comm n,2,1
+ 572               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 lcd_c.c
+C:\users\cdac1\Temp/ccvCFaPq.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccvCFaPq.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccvCFaPq.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccvCFaPq.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccvCFaPq.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccvCFaPq.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccvCFaPq.s:73     .text:00000000 __vector_8
+                            *COM*:00000002 n
+C:\users\cdac1\Temp/ccvCFaPq.s:111    .text:00000028 main
+C:\users\cdac1\Temp/ccvCFaPq.s:173    .text:00000068 lcd_init
+C:\users\cdac1\Temp/ccvCFaPq.s:225    .text:00000096 lcd_string
+C:\users\cdac1\Temp/ccvCFaPq.s:485    .text:000001dc delay
+C:\users\cdac1\Temp/ccvCFaPq.s:275    .text:000000cc lcd_cmd
+C:\users\cdac1\Temp/ccvCFaPq.s:380    .text:00000154 lcd_data
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

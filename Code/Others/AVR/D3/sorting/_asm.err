@@ -1,0 +1,17 @@
+Creating   'sorting.eep'
+Creating   'sorting.hex'
+Creating   'sorting.obj'
+Creating   'sorting.lis'
+Creating   'sorting.map'
+
+Assembling 'sorting.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   76 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   76 words
+
+Assembly complete with no errors.
+Deleting   'sorting.eep'

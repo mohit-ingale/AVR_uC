@@ -1,0 +1,974 @@
+   1               		.file	"xx.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  86               	.global	task_bits
+  87               	.global	task_bits
+  88               		.section .bss
+  91               	task_bits:
+  92 0000 00        		.skip 1,0
+  93               	.global	tick_flag
+  94               	.global	tick_flag
+  97               	tick_flag:
+  98 0001 00        		.skip 1,0
+  99               	.global	task_timers
+ 100               	.global	task_timers
+ 103               	task_timers:
+ 104 0002 0000 0000 		.skip 16,0
+ 104      0000 0000 
+ 104      0000 0000 
+ 104      0000 0000 
+ 105               		.section	.progmem.data,"a",@progbits
+ 108               	bit_mask:
+ 109 0000 01        		.byte	1
+ 110 0001 02        		.byte	2
+ 111 0002 04        		.byte	4
+ 112 0003 08        		.byte	8
+ 113 0004 10        		.byte	16
+ 114 0005 20        		.byte	32
+ 115 0006 40        		.byte	64
+ 116 0007 80        		.byte	-128
+ 117               		.text
+ 119               	.global	main
+ 121               	main:
+   1:xx.c          **** // ***********************************************************
+   2:xx.c          **** // Project:
+   3:xx.c          **** // Author:
+   4:xx.c          **** // Module description:
+   5:xx.c          **** // ***********************************************************
+   6:xx.c          **** 
+   7:xx.c          **** #include <avr\io.h>              // Most basic include files
+   8:xx.c          **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:xx.c          **** #include <avr\signal.h>          // here
+  10:xx.c          **** #include <avr/pgmspace.h>
+  11:xx.c          **** void init_devices(void);
+  12:xx.c          **** void timer0_init(void);
+  13:xx.c          **** void reset_task(char tsk);
+  14:xx.c          **** void set_task(char tsk);
+  15:xx.c          **** void task_dispatch(void);
+  16:xx.c          **** void task0(void);
+  17:xx.c          **** void task1(void);
+  18:xx.c          **** void task2(void);
+  19:xx.c          **** void task3(void);
+  20:xx.c          **** void task4(void);
+  21:xx.c          **** void task5(void);
+  22:xx.c          **** void task6(void);
+  23:xx.c          **** void task7(void);
+  24:xx.c          **** 
+  25:xx.c          **** #define NUM_TASKS 8
+  26:xx.c          **** char task_bits = 0;  /* lsb is hi priority task */
+  27:xx.c          **** volatile char tick_flag = 0;    /* if non-zero, a tick has elapsed */
+  28:xx.c          **** unsigned int task_timers[NUM_TASKS]={0,0,0,0,0,0,0,0};                  /* init the timers to 0 on 
+  29:xx.c          **** static const PROGMEM char bit_mask[]={1,2,4,8,16,32,64,128};            /* value -> bit mask xlate 
+  30:xx.c          **** 
+  31:xx.c          **** int main(void)
+  32:xx.c          **** {
+ 122               	2,.LM0-.LFBB1
+ 123               	.LM0:
+ 124               	.LFBB1:
+ 125 0000 DF93      		push r29
+ 126 0002 CF93      		push r28
+ 127 0004 CDB7      		in r28,__SP_L__
+ 128 0006 DEB7      		in r29,__SP_H__
+ 129               	/* prologue: function */
+ 130               	/* frame size = 0 */
+  33:xx.c          **** 
+  34:xx.c          ****   init_devices();
+ 131               	8,0,34,.LM1-.LFBB1
+ 132               	.LM1:
+ 133 0008 0E94 0000 		call init_devices
+  35:xx.c          **** //
+  36:xx.c          **** //	start at least one task here
+  37:xx.c          **** //
+  38:xx.c          **** set_task(7);	//task7 runs
+ 134               	tabn	68,0,38,.LM2-.LFBB1
+ 135               	.LM2:
+ 136 000c 87E0      		ldi r24,lo8(7)
+ 137 000e 0E94 0000 		call set_task
+  39:xx.c          **** set_task(6);	//task6 runs
+ 138               	abn	68,0,39,.LM3-.LFBB1
+ 139               	.LM3:
+ 140 0012 86E0      		ldi r24,lo8(6)
+ 141 0014 0E94 0000 		call set_task
+ 142               	.L3:
+  40:xx.c          **** 
+  41:xx.c          **** //      main loop
+  42:xx.c          **** 
+  43:xx.c          ****   while(1)
+  44:xx.c          ****     {
+  45:xx.c          ****     if (tick_flag)
+ 143               	bn	68,0,45,.LM4-.LFBB1
+ 144               	.LM4:
+ 145 0018 8091 0000 		lds r24,tick_flag
+ 146 001c 8823      		tst r24
+ 147 001e 01F0      		breq .L3
+  46:xx.c          ****       {
+  47:xx.c          ****       tick_flag = 0;
+ 148               	bn	68,0,47,.LM5-.LFBB1
+ 149               	.LM5:
+ 150 0020 1092 0000 		sts tick_flag,__zero_reg__
+  48:xx.c          **** 	  task_dispatch();              // well....
+ 151               	tabn	68,0,48,.LM6-.LFBB1
+ 152               	.LM6:
+ 153 0024 0E94 0000 		call task_dispatch
+ 154 0028 00C0      		rjmp .L3
+ 156               	.Lscope1:
+ 158               	.global	task_dispatch
+ 160               	task_dispatch:
+  49:xx.c          **** 	  }
+  50:xx.c          **** 	}
+  51:xx.c          ****   return 0;
+  52:xx.c          **** }
+  53:xx.c          **** //
+  54:xx.c          **** //	a task gets dispatched on every tick_flag tick (10ms)
+  55:xx.c          **** //
+  56:xx.c          **** void task_dispatch(void)
+  57:xx.c          **** {
+ 161               	,0,57,.LM7-.LFBB2
+ 162               	.LM7:
+ 163               	.LFBB2:
+ 164 002a DF93      		push r29
+ 165 002c CF93      		push r28
+ 166 002e 00D0      		rcall .
+ 167 0030 00D0      		rcall .
+ 168 0032 00D0      		rcall .
+ 169 0034 CDB7      		in r28,__SP_L__
+ 170 0036 DEB7      		in r29,__SP_H__
+ 171               	/* prologue: function */
+ 172               	/* frame size = 6 */
+  58:xx.c          ****   /* scan the task bits for an active task and execute it */
+  59:xx.c          **** 
+  60:xx.c          ****   char task;
+  61:xx.c          **** 	
+  62:xx.c          **** 
+  63:xx.c          **** /* take care of the task timers. if the value ==0 skip it
+  64:xx.c          **** 	else decrement it. If it decrements to zero, activate the task associated with it */
+  65:xx.c          **** 
+  66:xx.c          ****   task=0;
+ 173               	,66,.LM8-.LFBB2
+ 174               	.LM8:
+ 175 0038 1C82      		std Y+4,__zero_reg__
+ 176 003a 00C0      		rjmp .L6
+ 177               	.L8:
+  67:xx.c          ****   while (task < NUM_TASKS )
+  68:xx.c          ****     {
+  69:xx.c          ****     if (task_timers[task])
+ 178               	bn	68,0,69,.LM9-.LFBB2
+ 179               	.LM9:
+ 180 003c 8C81      		ldd r24,Y+4
+ 181 003e 882F      		mov r24,r24
+ 182 0040 90E0      		ldi r25,lo8(0)
+ 183 0042 880F      		lsl r24
+ 184 0044 991F      		rol r25
+ 185 0046 FC01      		movw r30,r24
+ 186 0048 E050      		subi r30,lo8(-(task_timers))
+ 187 004a F040      		sbci r31,hi8(-(task_timers))
+ 188 004c 8081      		ld r24,Z
+ 189 004e 9181      		ldd r25,Z+1
+ 190 0050 0097      		sbiw r24,0
+ 191 0052 01F0      		breq .L7
+  70:xx.c          **** 	   {
+  71:xx.c          ****   	   task_timers[task]--;            /* dec the timer */
+ 192               	1,.LM10-.LFBB2
+ 193               	.LM10:
+ 194 0054 8C81      		ldd r24,Y+4
+ 195 0056 282F      		mov r18,r24
+ 196 0058 30E0      		ldi r19,lo8(0)
+ 197 005a C901      		movw r24,r18
+ 198 005c 880F      		lsl r24
+ 199 005e 991F      		rol r25
+ 200 0060 FC01      		movw r30,r24
+ 201 0062 E050      		subi r30,lo8(-(task_timers))
+ 202 0064 F040      		sbci r31,hi8(-(task_timers))
+ 203 0066 8081      		ld r24,Z
+ 204 0068 9181      		ldd r25,Z+1
+ 205 006a AC01      		movw r20,r24
+ 206 006c 4150      		subi r20,lo8(-(-1))
+ 207 006e 5040      		sbci r21,hi8(-(-1))
+ 208 0070 C901      		movw r24,r18
+ 209 0072 880F      		lsl r24
+ 210 0074 991F      		rol r25
+ 211 0076 FC01      		movw r30,r24
+ 212 0078 E050      		subi r30,lo8(-(task_timers))
+ 213 007a F040      		sbci r31,hi8(-(task_timers))
+ 214 007c 5183      		std Z+1,r21
+ 215 007e 4083      		st Z,r20
+  72:xx.c          **** 	   if (task_timers[task] == 0 )
+ 216               	FBB2
+ 217               	.LM11:
+ 218 0080 8C81      		ldd r24,Y+4
+ 219 0082 882F      		mov r24,r24
+ 220 0084 90E0      		ldi r25,lo8(0)
+ 221 0086 880F      		lsl r24
+ 222 0088 991F      		rol r25
+ 223 008a FC01      		movw r30,r24
+ 224 008c E050      		subi r30,lo8(-(task_timers))
+ 225 008e F040      		sbci r31,hi8(-(task_timers))
+ 226 0090 8081      		ld r24,Z
+ 227 0092 9181      		ldd r25,Z+1
+ 228 0094 0097      		sbiw r24,0
+ 229 0096 01F4      		brne .L7
+  73:xx.c          **** 	   		{
+  74:xx.c          **** 	    	set_task(task); /* if ==0 activate the task bit */
+ 230               	4,.LM12-.LFBB2
+ 231               	.LM12:
+ 232 0098 8C81      		ldd r24,Y+4
+ 233 009a 0E94 0000 		call set_task
+ 234               	.L7:
+  75:xx.c          **** 			}
+  76:xx.c          **** 	   }
+  77:xx.c          ****     task++;
+ 235               	bn	68,0,77,.LM13-.LFBB2
+ 236               	.LM13:
+ 237 009e 8C81      		ldd r24,Y+4
+ 238 00a0 8F5F      		subi r24,lo8(-(1))
+ 239 00a2 8C83      		std Y+4,r24
+ 240               	.L6:
+ 242               	.LM14:
+ 243 00a4 8C81      		ldd r24,Y+4
+ 244 00a6 8830      		cpi r24,lo8(8)
+ 245 00a8 00F0      		brlo .L8
+  78:xx.c          ****     }
+  79:xx.c          **** 
+  80:xx.c          ****   task = 0; /* start at the most significant task */
+ 246               	0,80,.LM15-.LFBB2
+ 247               	.LM15:
+ 248 00aa 1C82      		std Y+4,__zero_reg__
+ 249 00ac 00C0      		rjmp .L9
+ 250               	.L11:
+ 251               	.LBB2:
+  81:xx.c          ****   while (task <= NUM_TASKS )
+  82:xx.c          ****     {
+  83:xx.c          **** 	  if ((task_bits & pgm_read_byte(&bit_mask[task])))
+ 252               	n	68,0,83,.LM16-.LFBB2
+ 253               	.LM16:
+ 254 00ae 8C81      		ldd r24,Y+4
+ 255 00b0 882F      		mov r24,r24
+ 256 00b2 90E0      		ldi r25,lo8(0)
+ 257 00b4 8050      		subi r24,lo8(-(bit_mask))
+ 258 00b6 9040      		sbci r25,hi8(-(bit_mask))
+ 259 00b8 9B83      		std Y+3,r25
+ 260 00ba 8A83      		std Y+2,r24
+ 261 00bc EA81      		ldd r30,Y+2
+ 262 00be FB81      		ldd r31,Y+3
+ 263               	/* #APP */
+ 264               	 ;  83 "xx.c" 1
+ 265 00c0 8491      		lpm r24, Z
+ 266               		
+ 267               	 ;  0 "" 2
+ 268               	/* #NOAPP */
+ 269 00c2 8983      		std Y+1,r24
+ 270 00c4 9981      		ldd r25,Y+1
+ 271               	.LBE2:
+ 272 00c6 8091 0000 		lds r24,task_bits
+ 273 00ca 8923      		and r24,r25
+ 274 00cc 8823      		tst r24
+ 275 00ce 01F4      		brne .L10
+  84:xx.c          **** 	  		{
+  85:xx.c          **** 	  		break; /* if activate task found..*/
+  86:xx.c          **** 			}
+  87:xx.c          ****       task++;         /* else try the next one */
+ 276               	FBB2
+ 277               	.LM17:
+ 278 00d0 8C81      		ldd r24,Y+4
+ 279 00d2 8F5F      		subi r24,lo8(-(1))
+ 280 00d4 8C83      		std Y+4,r24
+ 281               	.L9:
+ 283               	.LM18:
+ 284 00d6 8C81      		ldd r24,Y+4
+ 285 00d8 8930      		cpi r24,lo8(9)
+ 286 00da 00F0      		brlo .L11
+ 287               	.L10:
+  88:xx.c          ****     }
+  89:xx.c          ****   switch(task)            /* if task bit is active..execute the task */
+ 288               	,89,.LM19-.LFBB2
+ 289               	.LM19:
+ 290 00dc 8C81      		ldd r24,Y+4
+ 291 00de 282F      		mov r18,r24
+ 292 00e0 30E0      		ldi r19,lo8(0)
+ 293 00e2 3E83      		std Y+6,r19
+ 294 00e4 2D83      		std Y+5,r18
+ 295 00e6 8D81      		ldd r24,Y+5
+ 296 00e8 9E81      		ldd r25,Y+6
+ 297 00ea 8330      		cpi r24,3
+ 298 00ec 9105      		cpc r25,__zero_reg__
+ 299 00ee 01F0      		breq .L16
+ 300 00f0 2D81      		ldd r18,Y+5
+ 301 00f2 3E81      		ldd r19,Y+6
+ 302 00f4 2430      		cpi r18,4
+ 303 00f6 3105      		cpc r19,__zero_reg__
+ 304 00f8 04F4      		brge .L21
+ 305 00fa 8D81      		ldd r24,Y+5
+ 306 00fc 9E81      		ldd r25,Y+6
+ 307 00fe 8130      		cpi r24,1
+ 308 0100 9105      		cpc r25,__zero_reg__
+ 309 0102 01F0      		breq .L14
+ 310 0104 2D81      		ldd r18,Y+5
+ 311 0106 3E81      		ldd r19,Y+6
+ 312 0108 2230      		cpi r18,2
+ 313 010a 3105      		cpc r19,__zero_reg__
+ 314 010c 04F4      		brge .L15
+ 315 010e 8D81      		ldd r24,Y+5
+ 316 0110 9E81      		ldd r25,Y+6
+ 317 0112 0097      		sbiw r24,0
+ 318 0114 01F0      		breq .L13
+ 319 0116 00C0      		rjmp .L22
+ 320               	.L21:
+ 321 0118 2D81      		ldd r18,Y+5
+ 322 011a 3E81      		ldd r19,Y+6
+ 323 011c 2530      		cpi r18,5
+ 324 011e 3105      		cpc r19,__zero_reg__
+ 325 0120 01F0      		breq .L18
+ 326 0122 8D81      		ldd r24,Y+5
+ 327 0124 9E81      		ldd r25,Y+6
+ 328 0126 8530      		cpi r24,5
+ 329 0128 9105      		cpc r25,__zero_reg__
+ 330 012a 04F0      		brlt .L17
+ 331 012c 2D81      		ldd r18,Y+5
+ 332 012e 3E81      		ldd r19,Y+6
+ 333 0130 2630      		cpi r18,6
+ 334 0132 3105      		cpc r19,__zero_reg__
+ 335 0134 01F0      		breq .L19
+ 336 0136 8D81      		ldd r24,Y+5
+ 337 0138 9E81      		ldd r25,Y+6
+ 338 013a 8730      		cpi r24,7
+ 339 013c 9105      		cpc r25,__zero_reg__
+ 340 013e 01F0      		breq .L20
+ 341 0140 00C0      		rjmp .L22
+ 342               	.L13:
+  90:xx.c          ****     {
+  91:xx.c          ****     case 0:
+  92:xx.c          ****       task0();
+ 343               	L22
+ 344               	.L14:
+ 346 0146 00C0      	.LM21:
+ 347               		call task1
+  93:xx.c          ****       break;
+  94:xx.c          ****     case 1:
+  95:xx.c          ****       task1();
+ 348               	 .L22
+ 349               	.L15:
+ 351 014c 00C0      	.LM22:
+ 352               		call task2
+  96:xx.c          ****       break;
+  97:xx.c          ****     case 2:
+  98:xx.c          ****       task2();
+ 353               	 .L22
+ 354               	.L16:
+ 356 0152 00C0      	.LM23:
+ 357               		call task3
+  99:xx.c          ****       break;
+ 100:xx.c          ****     case 3:
+ 101:xx.c          ****       task3();
+ 358               	 .L22
+ 359               	.L17:
+ 361 0158 00C0      	.LM24:
+ 362               		call task4
+ 102:xx.c          ****       break;
+ 103:xx.c          ****     case 4:
+ 104:xx.c          ****       task4();
+ 363               	 .L22
+ 364               	.L18:
+ 366 015e 00C0      	.LM25:
+ 367               		call task5
+ 105:xx.c          ****       break;
+ 106:xx.c          ****     case 5:
+ 107:xx.c          ****       task5();
+ 368               	 .L22
+ 369               	.L19:
+ 371 0164 00C0      	.LM26:
+ 372               		call task6
+ 108:xx.c          ****       break;
+ 109:xx.c          ****     case 6:
+ 110:xx.c          ****       task6();
+ 373               	 .L22
+ 374               	.L20:
+ 376 016a 00C0      	.LM27:
+ 377               		call task7
+ 111:xx.c          ****       break;
+ 112:xx.c          ****     case 7:
+ 113:xx.c          ****       task7();
+ 378               	
+ 379               	/* epilogue start */
+ 381               	.LM28:
+ 382               		adiw r28,6
+ 114:xx.c          ****       break;
+ 115:xx.c          ****     default:
+ 116:xx.c          ****       break;                  /* no task was active!! */
+ 117:xx.c          ****     }
+ 118:xx.c          **** }
+ 383               	__tmp_reg__,__SREG__
+ 384               		cli
+ 385 0170 2696      		out __SP_H__,r29
+ 386 0172 0FB6      		out __SREG__,__tmp_reg__
+ 387 0174 F894      		out __SP_L__,r28
+ 388 0176 DEBF      		pop r28
+ 389 0178 0FBE      		pop r29
+ 390 017a CDBF      		ret
+ 399               	.Lscope2:
+ 402               	.global	set_task
+ 404               	set_task:
+ 406               	.LM29:
+ 407               	.LFBB3:
+ 119:xx.c          **** 
+ 120:xx.c          **** // enable a task for execution
+ 121:xx.c          **** void set_task(char tsk)
+ 122:xx.c          **** {
+ 408               	l .
+ 409               		rcall .
+ 410               		in r28,__SP_L__
+ 411 0182 DF93      		in r29,__SP_H__
+ 412 0184 CF93      	/* prologue: function */
+ 413 0186 00D0      	/* frame size = 4 */
+ 414 0188 00D0      		std Y+4,r24
+ 415 018a CDB7      	.LBB3:
+ 417               	.LM30:
+ 418               		ldd r24,Y+4
+ 419 018e 8C83      		mov r24,r24
+ 420               		ldi r25,lo8(0)
+ 123:xx.c          ****   task_bits |= pgm_read_byte(&bit_mask[tsk]);       /* sets a task bit */
+ 421               	(-(bit_mask))
+ 422               		sbci r25,hi8(-(bit_mask))
+ 423 0190 8C81      		std Y+3,r25
+ 424 0192 882F      		std Y+2,r24
+ 425 0194 90E0      		ldd r30,Y+2
+ 426 0196 8050      		ldd r31,Y+3
+ 427 0198 9040      	/* #APP */
+ 428 019a 9B83      	 ;  123 "xx.c" 1
+ 429 019c 8A83      		lpm r24, Z
+ 430 019e EA81      		
+ 431 01a0 FB81      	 ;  0 "" 2
+ 432               	/* #NOAPP */
+ 433               		std Y+1,r24
+ 434 01a2 8491      		ldd r25,Y+1
+ 435               	.LBE3:
+ 436               		lds r24,task_bits
+ 437               		or r24,r25
+ 438 01a4 8983      		sts task_bits,r24
+ 439 01a6 9981      	/* epilogue start */
+ 441 01a8 8091 0000 	.LM31:
+ 442 01ac 892B      		pop __tmp_reg__
+ 443 01ae 8093 0000 		pop __tmp_reg__
+ 444               		pop __tmp_reg__
+ 124:xx.c          **** }
+ 445               	8
+ 446               		pop r29
+ 447 01b2 0F90      		ret
+ 453 01be 0895      	.Lscope3:
+ 456               	.global	reset_task
+ 458               	reset_task:
+ 460               	.LM32:
+ 461               	.LFBB4:
+ 462               		push r29
+ 463               		push r28
+ 464               		rcall .
+ 125:xx.c          **** // disable a task from executing
+ 126:xx.c          **** void reset_task(char tsk)
+ 127:xx.c          **** {
+ 465               	P_L__
+ 466               		in r29,__SP_H__
+ 467               	/* prologue: function */
+ 468 01c0 DF93      	/* frame size = 4 */
+ 469 01c2 CF93      		std Y+4,r24
+ 470 01c4 00D0      	.LBB4:
+ 472 01c8 CDB7      	.LM33:
+ 473 01ca DEB7      		ldd r24,Y+4
+ 474               		mov r24,r24
+ 475               		ldi r25,lo8(0)
+ 476 01cc 8C83      		subi r24,lo8(-(bit_mask))
+ 477               		sbci r25,hi8(-(bit_mask))
+ 128:xx.c          ****   task_bits &= (~pgm_read_byte(&bit_mask[tsk]));  /* resets a task bit */
+ 478               		std Y+2,r24
+ 479               		ldd r30,Y+2
+ 480 01ce 8C81      		ldd r31,Y+3
+ 481 01d0 882F      	/* #APP */
+ 482 01d2 90E0      	 ;  128 "xx.c" 1
+ 483 01d4 8050      		lpm r24, Z
+ 484 01d6 9040      		
+ 485 01d8 9B83      	 ;  0 "" 2
+ 486 01da 8A83      	/* #NOAPP */
+ 487 01dc EA81      		std Y+1,r24
+ 488 01de FB81      		ldd r24,Y+1
+ 489               	.LBE4:
+ 490               		mov r25,r24
+ 491 01e0 8491      		com r25
+ 492               		lds r24,task_bits
+ 493               		and r24,r25
+ 494               		sts task_bits,r24
+ 495 01e2 8983      	/* epilogue start */
+ 497               	.LM34:
+ 498 01e6 982F      		pop __tmp_reg__
+ 499 01e8 9095      		pop __tmp_reg__
+ 500 01ea 8091 0000 		pop __tmp_reg__
+ 501 01ee 8923      		pop __tmp_reg__
+ 502 01f0 8093 0000 		pop r28
+ 503               		pop r29
+ 129:xx.c          **** }
+ 504               	reset_task
+ 509 01fa 0F90      	.Lscope4:
+ 511 01fe DF91      	.global	task0
+ 513               	task0:
+ 515               	.LM35:
+ 516               	.LFBB5:
+ 517               		push r29
+ 518               		push r28
+ 519               		in r28,__SP_L__
+ 520               		in r29,__SP_H__
+ 521               	/* prologue: function */
+ 522               	/* frame size = 0 */
+ 130:xx.c          **** 
+ 131:xx.c          **** void task0(void)
+ 132:xx.c          **** {
+ 523               	M36-.LFBB5
+ 524               	.LM36:
+ 525               		ldi r24,lo8(0)
+ 526 0202 DF93      		call reset_task
+ 527 0204 CF93      	/* epilogue start */
+ 529 0208 DEB7      	.LM37:
+ 530               		pop r28
+ 531               		pop r29
+ 133:xx.c          ****   reset_task(0);
+ 532               	ze	task0, .-task0
+ 533               	.Lscope5:
+ 535 020c 0E94 0000 	.global	task1
+ 134:xx.c          **** }
+ 537               	:
+ 539 0210 CF91      	.LM38:
+ 540 0212 DF91      	.LFBB6:
+ 541 0214 0895      		push r29
+ 542               		push r28
+ 543               		in r28,__SP_L__
+ 544               		in r29,__SP_H__
+ 545               	/* prologue: function */
+ 546               	/* frame size = 0 */
+ 135:xx.c          **** void task1(void)
+ 136:xx.c          **** {
+ 548               	 r24,lo8(1)
+ 549               		call reset_task
+ 550               	/* epilogue start */
+ 552 0218 CF93      	.LM40:
+ 553 021a CDB7      		pop r28
+ 554 021c DEB7      		pop r29
+ 555               		ret
+ 137:xx.c          ****   reset_task(1);
+ 557               	
+ 559 021e 81E0      	.global	task2
+ 561               	task2:
+ 138:xx.c          **** }
+ 562               	abn	68,0,140,.LM41-.LFBB7
+ 563               	.LM41:
+ 564 0224 CF91      	.LFBB7:
+ 565 0226 DF91      		push r29
+ 566 0228 0895      		push r28
+ 567               		in r28,__SP_L__
+ 568               		in r29,__SP_H__
+ 569               	/* prologue: function */
+ 570               	/* frame size = 0 */
+ 572               	.LM42:
+ 139:xx.c          **** void task2(void)
+ 140:xx.c          **** {
+ 573               	8(2)
+ 574               		call reset_task
+ 575               	/* epilogue start */
+ 577 022c CF93      	.LM43:
+ 578 022e CDB7      		pop r28
+ 579 0230 DEB7      		pop r29
+ 580               		ret
+ 141:xx.c          ****   reset_task(2);
+ 582               	
+ 584 0232 82E0      	.global	task3
+ 586               	task3:
+ 142:xx.c          **** }
+ 587               	abn	68,0,144,.LM44-.LFBB8
+ 588               	.LM44:
+ 589 0238 CF91      	.LFBB8:
+ 590 023a DF91      		push r29
+ 591 023c 0895      		push r28
+ 592               		in r28,__SP_L__
+ 593               		in r29,__SP_H__
+ 594               	/* prologue: function */
+ 595               	/* frame size = 0 */
+ 597               	.LM45:
+ 143:xx.c          **** void task3(void)
+ 144:xx.c          **** {
+ 598               	8(3)
+ 599               		call reset_task
+ 600               	/* epilogue start */
+ 602 0240 CF93      	.LM46:
+ 603 0242 CDB7      		pop r28
+ 604 0244 DEB7      		pop r29
+ 605               		ret
+ 145:xx.c          ****   reset_task(3);
+ 607               	
+ 609 0246 83E0      	.global	task4
+ 611               	task4:
+ 146:xx.c          **** }
+ 612               	abn	68,0,148,.LM47-.LFBB9
+ 613               	.LM47:
+ 614 024c CF91      	.LFBB9:
+ 615 024e DF91      		push r29
+ 616 0250 0895      		push r28
+ 617               		in r28,__SP_L__
+ 618               		in r29,__SP_H__
+ 619               	/* prologue: function */
+ 620               	/* frame size = 0 */
+ 622               	.LM48:
+ 147:xx.c          **** void task4(void)
+ 148:xx.c          **** {
+ 623               	8(4)
+ 624               		call reset_task
+ 625               	/* epilogue start */
+ 627 0254 CF93      	.LM49:
+ 628 0256 CDB7      		pop r28
+ 629 0258 DEB7      		pop r29
+ 630               		ret
+ 149:xx.c          ****   reset_task(4);
+ 632               	
+ 634 025a 84E0      	.global	task5
+ 636               	task5:
+ 150:xx.c          **** }
+ 637               	abn	68,0,152,.LM50-.LFBB10
+ 638               	.LM50:
+ 639 0260 CF91      	.LFBB10:
+ 640 0262 DF91      		push r29
+ 641 0264 0895      		push r28
+ 642               		in r28,__SP_L__
+ 643               		in r29,__SP_H__
+ 644               	/* prologue: function */
+ 645               	/* frame size = 0 */
+ 647               	.LM51:
+ 151:xx.c          **** void task5(void)
+ 152:xx.c          **** {
+ 648               	8(5)
+ 649               		call reset_task
+ 650               	/* epilogue start */
+ 652 0268 CF93      	.LM52:
+ 653 026a CDB7      		pop r28
+ 654 026c DEB7      		pop r29
+ 655               		ret
+ 153:xx.c          ****   reset_task(5);
+ 657               	:
+ 659 026e 85E0      	.global	task6
+ 661               	task6:
+ 154:xx.c          **** }
+ 662               	bn	68,0,159,.LM53-.LFBB11
+ 663               	.LM53:
+ 664 0274 CF91      	.LFBB11:
+ 665 0276 DF91      		push r29
+ 666 0278 0895      		push r28
+ 667               		in r28,__SP_L__
+ 668               		in r29,__SP_H__
+ 669               	/* prologue: function */
+ 670               	/* frame size = 0 */
+ 672               	.LM54:
+ 155:xx.c          **** //
+ 156:xx.c          **** //	flash PORTB.4 at 2hz
+ 157:xx.c          **** //
+ 158:xx.c          **** void task6(void)
+ 159:xx.c          **** {
+ 673               	8(37)
+ 674               		ldi r27,hi8(37)
+ 675               		ldi r30,lo8(37)
+ 676 027a DF93      		ldi r31,hi8(37)
+ 677 027c CF93      		ld r25,Z
+ 678 027e CDB7      		ldi r24,lo8(16)
+ 679 0280 DEB7      		eor r24,r25
+ 680               		st X,r24
+ 160:xx.c          **** PORTB ^= (1<<4);
+ 682               	unction */
+ 683               	/* frame size = 0 */
+ 685 0284 B0E0      	.LM54:
+ 686 0286 E5E2      		ldi r26,lo8(37)
+ 687 0288 F0E0      		ldi r27,hi8(37)
+ 688 028a 9081      		ldi r30,lo8(37)
+ 689 028c 80E1      		ldi r31,hi8(37)
+ 690 028e 8927      		ld r25,Z
+ 691 0290 8C93      		ldi r24,lo8(16)
+ 161:xx.c          **** task_timers[6] = 25;		//every 250ms
+ 692               	25
+ 693               		st X,r24
+ 695 0294 90E0      	.LM55:
+ 696 0296 9093 0000 		ldi r24,lo8(25)
+ 697 029a 8093 0000 		ldi r25,hi8(25)
+ 162:xx.c          **** reset_task(6);
+ 698               	,160,.LM54-.LFBB11
+ 699               	.LM54:
+ 700 029e 86E0      		ldi r26,lo8(37)
+ 701 02a0 0E94 0000 		ldi r27,hi8(37)
+ 702               		ldi r30,lo8(37)
+ 163:xx.c          **** }
+ 703               	0,159,.LM53-.LFBB11
+ 704               	.LM53:
+ 705 02a4 CF91      	.LFBB11:
+ 706 02a6 DF91      		push r29
+ 707 02a8 0895      		push r28
+ 708               		in r28,__SP_L__
+ 709               		in r29,__SP_H__
+ 710               	/* prologue: function */
+ 711               	/* frame size = 0 */
+ 713               	.LM54:
+ 164:xx.c          **** //
+ 165:xx.c          **** //	flash PORTB.5 at 1hz
+ 166:xx.c          **** //
+ 167:xx.c          **** void task7(void)
+ 168:xx.c          **** {
+ 714               	8(37)
+ 715               		ldi r27,hi8(37)
+ 716               		ldi r30,lo8(37)
+ 717 02aa DF93      		ldi r31,hi8(37)
+ 718 02ac CF93      		ld r25,Z
+ 719 02ae CDB7      		ldi r24,lo8(16)
+ 720 02b0 DEB7      		eor r24,r25
+ 721               		st X,r24
+ 169:xx.c          **** PORTB ^= (1<<5);
+ 723               	unction */
+ 724               	/* frame size = 0 */
+ 726 02b4 B0E0      	.LM54:
+ 727 02b6 E5E2      		ldi r26,lo8(37)
+ 728 02b8 F0E0      		ldi r27,hi8(37)
+ 729 02ba 9081      		ldi r30,lo8(37)
+ 730 02bc 80E2      		ldi r31,hi8(37)
+ 731 02be 8927      		ld r25,Z
+ 732 02c0 8C93      		ldi r24,lo8(16)
+ 170:xx.c          **** task_timers[7] = 50;		//every 500ms
+ 733               	25
+ 734               		st X,r24
+ 736 02c4 90E0      	.LM55:
+ 737 02c6 9093 0000 		ldi r24,lo8(25)
+ 738 02ca 8093 0000 		ldi r25,hi8(25)
+ 171:xx.c          **** reset_task(7);
+ 739               	,160,.LM54-.LFBB11
+ 740               	.LM54:
+ 741 02ce 87E0      		ldi r26,lo8(37)
+ 742 02d0 0E94 0000 		ldi r27,hi8(37)
+ 743               		ldi r30,lo8(37)
+ 172:xx.c          **** }
+ 744               	0,159,.LM53-.LFBB11
+ 745               	.LM53:
+ 746 02d4 CF91      	.LFBB11:
+ 747 02d6 DF91      		push r29
+ 748 02d8 0895      		push r28
+ 749               		in r28,__SP_L__
+ 750               		in r29,__SP_H__
+ 751               	/* prologue: function */
+ 752               	/* frame size = 0 */
+ 754               	.LM54:
+ 173:xx.c          **** //call this routine to initialize all peripherals
+ 174:xx.c          **** void init_devices(void)
+ 175:xx.c          **** {
+ 755               	8(37)
+ 756               		ldi r27,hi8(37)
+ 757               		ldi r30,lo8(37)
+ 758 02da DF93      		ldi r31,hi8(37)
+ 759 02dc CF93      		ld r25,Z
+ 760 02de CDB7      		ldi r24,lo8(16)
+ 761 02e0 DEB7      		eor r24,r25
+ 762               		st X,r24
+ 176:xx.c          ****  //stop errant interrupts until set up
+ 177:xx.c          ****  cli(); //disable all interrupts
+ 764               	unction */
+ 765               	/* frame size = 0 */
+ 767               	.LM54:
+ 768 02e2 F894      		ldi r26,lo8(37)
+ 769               		ldi r27,hi8(37)
+ 178:xx.c          **** 
+ 179:xx.c          **** 
+ 180:xx.c          ****  DDRB = 0x30;	//port 4 & 5 as outputs
+ 770               	30,lo8(37)
+ 771               		ldi r31,hi8(37)
+ 772               		ld r25,Z
+ 773 02e4 E4E2      		ldi r24,lo8(16)
+ 774 02e6 F0E0      		eor r24,r25
+ 775 02e8 80E3      		st X,r24
+ 181:xx.c          **** 
+ 182:xx.c          ****  timer0_init();
+ 777               	unction */
+ 778               	/* frame size = 0 */
+ 183:xx.c          **** 
+ 184:xx.c          ****  MCUCR = 0x00;
+ 780               	54:
+ 781               		ldi r26,lo8(37)
+ 782 02f0 E5E5      		ldi r27,hi8(37)
+ 783 02f2 F0E0      		ldi r30,lo8(37)
+ 784 02f4 1082      		ldi r31,hi8(37)
+ 185:xx.c          ****  EICRA = 0x00; //extended ext ints
+ 785               	1
+ 786               	.LM53:
+ 787 02f6 E9E6      	.LFBB11:
+ 788 02f8 F0E0      		push r29
+ 789 02fa 1082      		push r28
+ 186:xx.c          ****  EIMSK = 0x00;
+ 790               	28,__SP_L__
+ 791               		in r29,__SP_H__
+ 792 02fc EDE3      	/* prologue: function */
+ 793 02fe F0E0      	/* frame size = 0 */
+ 187:xx.c          **** 
+ 188:xx.c          ****  TIMSK0 = 0x02; //timer 0 interrupt sources
+ 795               	:
+ 796               		ldi r26,lo8(37)
+ 797 0302 EEE6      		ldi r27,hi8(37)
+ 798 0304 F0E0      		ldi r30,lo8(37)
+ 799 0306 82E0      		ldi r31,hi8(37)
+ 800 0308 8083      		ld r25,Z
+ 189:xx.c          **** 
+ 190:xx.c          ****  PRR = 0x00; //power controller
+ 801               	FBB11:
+ 802               		push r29
+ 803 030a E4E6      		push r28
+ 804 030c F0E0      		in r28,__SP_L__
+ 805 030e 1082      		in r29,__SP_H__
+ 191:xx.c          ****  sei(); //re-enable interrupts
+ 806               	ologue: function */
+ 807               	/* frame size = 0 */
+ 809               	.LM54:
+ 810 0310 7894      		ldi r26,lo8(37)
+ 811               		ldi r27,hi8(37)
+ 812               		ldi r30,lo8(37)
+ 192:xx.c          ****  //all peripherals are now initialized
+ 193:xx.c          **** }
+ 813               	1,hi8(37)
+ 814               		ld r25,Z
+ 815               		ldi r24,lo8(16)
+ 816 0312 CF91      		eor r24,r25
+ 817 0314 DF91      		st X,r24
+ 819               	.LM55:
+ 820               		ldi r24,lo8(25)
+ 821               		ldi r25,hi8(25)
+ 822               		sts (task_timers+12)+1,r25
+ 823               		sts task_timers+12,r24
+ 194:xx.c          **** //TIMER0 initialize - prescale:1024
+ 195:xx.c          **** // WGM: CTC
+ 196:xx.c          **** // desired value: 10mSec
+ 197:xx.c          **** // actual value: 10.048mSec (-0.5%)
+ 198:xx.c          **** void timer0_init(void)
+ 199:xx.c          **** {
+ 825               	hi8(37)
+ 826               		ld r25,Z
+ 827               		ldi r24,lo8(16)
+ 828 0318 DF93      		eor r24,r25
+ 829 031a CF93      		st X,r24
+ 831 031e DEB7      	.LM55:
+ 832               		ldi r24,lo8(25)
+ 833               		ldi r25,hi8(25)
+ 200:xx.c          ****  TCCR0B = 0x00; //stop
+ 834               	,160,.LM54-.LFBB11
+ 835               	.LM54:
+ 836 0320 E5E4      		ldi r26,lo8(37)
+ 837 0322 F0E0      		ldi r27,hi8(37)
+ 838 0324 1082      		ldi r30,lo8(37)
+ 201:xx.c          ****  TCNT0 = 0x00; //set count
+ 839               	0,159,.LM53-.LFBB11
+ 840               	.LM53:
+ 841 0326 E6E4      	.LFBB11:
+ 842 0328 F0E0      		push r29
+ 843 032a 1082      		push r28
+ 202:xx.c          ****  TCCR0A = 0x02;	//CTC mode
+ 844               	28,__SP_L__
+ 845               		in r29,__SP_H__
+ 846 032c E4E4      	/* prologue: function */
+ 847 032e F0E0      	/* frame size = 0 */
+ 849 0332 8083      	.LM54:
+ 203:xx.c          ****  OCR0A = 0x9C;
+ 850               	26,lo8(37)
+ 851               		ldi r27,hi8(37)
+ 852 0334 E7E4      		ldi r30,lo8(37)
+ 853 0336 F0E0      		ldi r31,hi8(37)
+ 854 0338 8CE9      		ld r25,Z
+ 855 033a 8083      		ldi r24,lo8(16)
+ 204:xx.c          ****  TCCR0B = 0x05; //start timer
+ 856               	push r28
+ 857               		in r28,__SP_L__
+ 858 033c E5E4      		in r29,__SP_H__
+ 859 033e F0E0      	/* prologue: function */
+ 860 0340 85E0      	/* frame size = 0 */
+ 862               	.LM54:
+ 205:xx.c          **** }
+ 863               	6,lo8(37)
+ 864               		ldi r27,hi8(37)
+ 865 0344 CF91      		ldi r30,lo8(37)
+ 866 0346 DF91      		ldi r31,hi8(37)
+ 867 0348 0895      		ld r25,Z
+ 868               		ldi r24,lo8(16)
+ 869               		eor r24,r25
+ 870               		st X,r24
+ 872               	.LM55:
+ 873               		ldi r24,lo8(25)
+ 206:xx.c          **** 
+ 207:xx.c          **** ISR(TIMER0_COMPA_vect)
+ 208:xx.c          **** {
+ 874               	 0 */
+ 876               	.LM54:
+ 877 034a 1F92      		ldi r26,lo8(37)
+ 878 034c 0F92      		ldi r27,hi8(37)
+ 879 034e 0FB6      		ldi r30,lo8(37)
+ 880 0350 0F92      		ldi r31,hi8(37)
+ 881 0352 1124      		ld r25,Z
+ 882 0354 8F93      		ldi r24,lo8(16)
+ 883 0356 DF93      		eor r24,r25
+ 884 0358 CF93      		st X,r24
+ 886 035c DEB7      	.LM55:
+ 887               		ldi r24,lo8(25)
+ 888               		ldi r25,hi8(25)
+ 209:xx.c          ****  //TIMER0 has overflowed
+ 210:xx.c          ****  	tick_flag = 1;
+ 889               	,160,.LM54-.LFBB11
+ 890               	.LM54:
+ 891 035e 81E0      		ldi r26,lo8(37)
+ 892 0360 8093 0000 		ldi r27,hi8(37)
+ 893               		ldi r30,lo8(37)
+ 211:xx.c          **** }
+ 894               	0,159,.LM53-.LFBB11
+ 895               	.LM53:
+ 896 0364 CF91      	.LFBB11:
+ 897 0366 DF91      		push r29
+ 898 0368 8F91      		push r28
+ 899 036a 0F90      		in r28,__SP_L__
+ 900 036c 0FBE      		in r29,__SP_H__
+ 901 036e 0F90      	/* prologue: function */
+ 902 0370 1F90      	/* frame size = 0 */
+ 904               	.LM54:
+ 905               		ldi r26,lo8(37)
+ 906               		ldi r27,hi8(37)
+ 907               		ldi r30,lo8(37)
+ 908               		ldi r31,hi8(37)
+ 909               		ld r25,Z
+ 910               		ldi r24,lo8(16)
+ 911               		eor r24,r25
+DEFINED SYMBOLS
+                            *ABS*:00000000 xx.c
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:2      *ABS*:0000003f __SREG__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:5      *ABS*:00000034 __CCP__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:91     .bss:00000000 task_bits
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:97     .bss:00000001 tick_flag
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:103    .bss:00000002 task_timers
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:108    .progmem.data:00000000 bit_mask
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:121    .text:00000000 main
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:754    .text:000002da init_devices
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:407    .text:00000182 set_task
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:160    .text:0000002a task_dispatch
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:522    .text:00000202 task0
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:547    .text:00000216 task1
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:572    .text:0000022a task2
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:597    .text:0000023e task3
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:622    .text:00000252 task4
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:647    .text:00000266 task5
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:672    .text:0000027a task6
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:713    .text:000002aa task7
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:464    .text:000001c0 reset_task
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:824    .text:00000318 timer0_init
+C:\Users\Mohit\AppData\Local\Temp/cc4ySXCc.s:873    .text:0000034a __vector_14
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

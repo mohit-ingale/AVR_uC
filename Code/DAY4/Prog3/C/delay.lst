@@ -1,0 +1,200 @@
+   1               		.file	"delay.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_8
+  73               	__vector_8:
+   1:delay.c       **** // ***********************************************************
+   2:delay.c       **** // Project:
+   3:delay.c       **** // Author:
+   4:delay.c       **** // Module description:
+   5:delay.c       **** // ***********************************************************
+   6:delay.c       **** 
+   7:delay.c       **** #include <avr\io.h>              // Most basic include files
+   8:delay.c       **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:delay.c       **** #include <avr\signal.h>          // here
+  10:delay.c       **** int n;
+  11:delay.c       **** ISR(TIMER1_OVF_vect)
+  12:delay.c       **** {
+  74               	2,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a DF93      		push r29
+  83 000c CF93      		push r28
+  84 000e CDB7      		in r28,__SP_L__
+  85 0010 DEB7      		in r29,__SP_H__
+  86               	/* prologue: Signal */
+  87               	/* frame size = 0 */
+  13:delay.c       **** 	n=0;
+  88               	3,.LM1-.LFBB1
+  89               	.LM1:
+  90 0012 1092 0000 		sts (n)+1,__zero_reg__
+  91 0016 1092 0000 		sts n,__zero_reg__
+  92               	/* epilogue start */
+  14:delay.c       **** }
+  93               	bn	68,0,14,.LM2-.LFBB1
+  94               	.LM2:
+  95 001a CF91      		pop r28
+  96 001c DF91      		pop r29
+  97 001e 0F90      		pop r0
+  98 0020 0FBE      		out __SREG__,r0
+  99 0022 0F90      		pop r0
+ 100 0024 1F90      		pop __zero_reg__
+ 101 0026 1895      		reti
+ 103               	.Lscope1:
+ 105               	.global	main
+ 107               	main:
+  15:delay.c       **** 
+  16:delay.c       **** int main(void)
+  17:delay.c       **** {
+ 108               	,.LM3-.LFBB2
+ 109               	.LM3:
+ 110               	.LFBB2:
+ 111 0028 DF93      		push r29
+ 112 002a CF93      		push r28
+ 113 002c CDB7      		in r28,__SP_L__
+ 114 002e DEB7      		in r29,__SP_H__
+ 115               	/* prologue: function */
+ 116               	/* frame size = 0 */
+  18:delay.c       **** 	DDRD=0xFF;
+ 117               	8,0,18,.LM4-.LFBB2
+ 118               	.LM4:
+ 119 0030 E1E3      		ldi r30,lo8(49)
+ 120 0032 F0E0      		ldi r31,hi8(49)
+ 121 0034 8FEF      		ldi r24,lo8(-1)
+ 122 0036 8083      		st Z,r24
+  19:delay.c       **** 	TIMSK|=(1<<TOIE1);
+ 123               	n	68,0,19,.LM5-.LFBB2
+ 124               	.LM5:
+ 125 0038 A9E5      		ldi r26,lo8(89)
+ 126 003a B0E0      		ldi r27,hi8(89)
+ 127 003c E9E5      		ldi r30,lo8(89)
+ 128 003e F0E0      		ldi r31,hi8(89)
+ 129 0040 8081      		ld r24,Z
+ 130 0042 8460      		ori r24,lo8(4)
+ 131 0044 8C93      		st X,r24
+  20:delay.c       **** 	sei();
+ 132               	8,0,20,.LM6-.LFBB2
+ 133               	.LM6:
+ 134               	/* #APP */
+ 135               	 ;  20 "delay.c" 1
+ 136 0046 7894      		sei
+ 137               	 ;  0 "" 2
+ 138               	/* #NOAPP */
+ 139               	.L4:
+  21:delay.c       ****    while(1) {
+  22:delay.c       ****  	  PORTD=0X55;
+ 140               	68,0,22,.LM7-.LFBB2
+ 141               	.LM7:
+ 142 0048 E2E3      		ldi r30,lo8(50)
+ 143 004a F0E0      		ldi r31,hi8(50)
+ 144 004c 85E5      		ldi r24,lo8(85)
+ 145 004e 8083      		st Z,r24
+  23:delay.c       **** 	   delay();
+ 146               	n	68,0,23,.LM8-.LFBB2
+ 147               	.LM8:
+ 148 0050 00D0      		rcall delay
+  24:delay.c       ****  	  PORTD=0XAA;
+ 149               	tabn	68,0,24,.LM9-.LFBB2
+ 150               	.LM9:
+ 151 0052 E2E3      		ldi r30,lo8(50)
+ 152 0054 F0E0      		ldi r31,hi8(50)
+ 153 0056 8AEA      		ldi r24,lo8(-86)
+ 154 0058 8083      		st Z,r24
+  25:delay.c       ****  	  delay();
+ 155               	n	68,0,25,.LM10-.LFBB2
+ 156               	.LM10:
+ 157 005a 00D0      		rcall delay
+ 158 005c 00C0      		rjmp .L4
+ 160               	.Lscope2:
+ 162               	.global	delay
+ 164               	delay:
+  26:delay.c       ****    }
+  27:delay.c       **** 
+  28:delay.c       **** }
+  29:delay.c       **** void delay(void)
+  30:delay.c       **** {
+ 165               	,0,30,.LM11-.LFBB3
+ 166               	.LM11:
+ 167               	.LFBB3:
+ 168 005e DF93      		push r29
+ 169 0060 CF93      		push r28
+ 170 0062 CDB7      		in r28,__SP_L__
+ 171 0064 DEB7      		in r29,__SP_H__
+ 172               	/* prologue: function */
+ 173               	/* frame size = 0 */
+  31:delay.c       **** 	n=1;
+ 174               	8,0,31,.LM12-.LFBB3
+ 175               	.LM12:
+ 176 0066 81E0      		ldi r24,lo8(1)
+ 177 0068 90E0      		ldi r25,hi8(1)
+ 178 006a 9093 0000 		sts (n)+1,r25
+ 179 006e 8093 0000 		sts n,r24
+  32:delay.c       **** 	TCNT1H=0X00;
+ 180               	n	68,0,32,.LM13-.LFBB3
+ 181               	.LM13:
+ 182 0072 EDE4      		ldi r30,lo8(77)
+ 183 0074 F0E0      		ldi r31,hi8(77)
+ 184 0076 1082      		st Z,__zero_reg__
+  33:delay.c       **** 	TCNT1L=0X00;
+ 185               	bn	68,0,33,.LM14-.LFBB3
+ 186               	.LM14:
+ 187 0078 ECE4      		ldi r30,lo8(76)
+ 188 007a F0E0      		ldi r31,hi8(76)
+ 189 007c 1082      		st Z,__zero_reg__
+  34:delay.c       **** 	TCCR1B|=(1<<CS12)|(1<<CS10);
+ 190               	,hi8(76)
+ 191               		st Z,__zero_reg__
+ 193 0080 B0E0      	.LM15:
+ 194 0082 EEE4      		ldi r26,lo8(78)
+ 195 0084 F0E0      		ldi r27,hi8(78)
+ 196 0086 8081      		ldi r30,lo8(78)
+ 197 0088 8560      		ldi r31,hi8(78)
+ 198 008a 8C93      		ld r24,Z
+ 199               		ori r24,lo8(5)
+  35:delay.c       **** 	while(n);
+ 200               	4,Z
+ 201               		ori r24,lo8(5)
+ 202 008c 8091 0000 		st X,r24
+ 203 0090 9091 0000 	.L7:
+ 205 0096 01F4      	.LM16:
+ 206               		lds r24,n
+  36:delay.c       **** }
+ 207               	16:
+ 208               		lds r24,n
+ 209 0098 CF91      		lds r25,(n)+1
+ 210 009a DF91      		sbiw r24,0
+ 211 009c 0895      		brne .L7
+ 212               	/* epilogue start */
+ 214               	.LM17:
+ 215               		pop r28
+ 216               		pop r29
+ 217               		ret
+DEFINED SYMBOLS
+                            *ABS*:00000000 delay.c
+C:\users\cdac1\Temp/ccUjbr7B.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccUjbr7B.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccUjbr7B.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccUjbr7B.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccUjbr7B.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccUjbr7B.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccUjbr7B.s:73     .text:00000000 __vector_8
+                            *COM*:00000002 n
+C:\users\cdac1\Temp/ccUjbr7B.s:107    .text:00000028 main
+C:\users\cdac1\Temp/ccUjbr7B.s:164    .text:0000005e delay
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

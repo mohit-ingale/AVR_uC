@@ -1,0 +1,17 @@
+Creating   'int_asm.eep'
+Creating   'int_asm.hex'
+Creating   'int_asm.obj'
+Creating   'int_asm.lis'
+Creating   'int_asm.map'
+
+Assembling 'int_asm.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   39 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   39 words
+
+Assembly complete with no errors.
+Deleting   'int_asm.eep'

@@ -1,0 +1,17 @@
+Creating   'mul.eep'
+Creating   'mul.hex'
+Creating   'mul.obj'
+Creating   'mul.lis'
+Creating   'mul.map'
+
+Assembling 'mul.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   21 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   21 words
+
+Assembly complete with no errors.
+Deleting   'mul.eep'

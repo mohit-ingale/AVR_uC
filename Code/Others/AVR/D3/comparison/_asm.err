@@ -1,0 +1,17 @@
+Creating   'cmp.eep'
+Creating   'cmp.hex'
+Creating   'cmp.obj'
+Creating   'cmp.lis'
+Creating   'cmp.map'
+
+Assembling 'cmp.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   28 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   28 words
+
+Assembly complete with no errors.
+Deleting   'cmp.eep'

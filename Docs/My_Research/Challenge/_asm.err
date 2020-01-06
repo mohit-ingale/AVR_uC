@@ -1,0 +1,17 @@
+Creating   'kernel.eep'
+Creating   'kernel.hex'
+Creating   'kernel.obj'
+Creating   'kernel.lis'
+Creating   'kernel.map'
+
+Assembling 'kernel.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :  196 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :  196 words
+
+Assembly complete with no errors.
+Deleting   'kernel.eep'

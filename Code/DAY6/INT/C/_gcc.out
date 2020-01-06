@@ -1,0 +1,36 @@
+
+-------- begin --------
+avr-gcc (WinAVR 20080610) 4.3.0
+Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Size before:
+int.elf  :
+section    size      addr
+.text       226         0
+.data         2   8388704
+.bss          2   8388706
+.stab       876         0
+.stabstr   1644         0
+Total      2750
+
+
+
+
+Size after:
+int.elf  :
+section    size      addr
+.text       226         0
+.data         2   8388704
+.bss          2   8388706
+.stab       876         0
+.stabstr   1644         0
+Total      2750
+
+
+
+Errors: none
+-------- end --------
+

@@ -1,0 +1,150 @@
+   1               		.file	"spi.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  70               	.global	i
+  71               		.data
+  74               	i:
+  75 0000 0600      		.word	6
+  76               		.text
+  78               	.global	__vector_10
+  80               	__vector_10:
+   1:spi.c         **** // ***********************************************************
+   2:spi.c         **** // Project:
+   3:spi.c         **** // Author:
+   4:spi.c         **** // Module description:
+   5:spi.c         **** // ***********************************************************
+   6:spi.c         **** 
+   7:spi.c         **** #include <avr\io.h>              // Most basic include files
+   8:spi.c         **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:spi.c         **** #include <avr\signal.h>          // here
+  10:spi.c         **** int i=6,FLAG;
+  11:spi.c         **** 
+  12:spi.c         **** ISR(SPI_STC_vect)
+  13:spi.c         **** {
+  81               	REG__
+  82               		push r0
+  83               		clr __zero_reg__
+  84 0000 1F92      		push r29
+  85 0002 0F92      		push r28
+  86 0004 0FB6      		in r28,__SP_L__
+  87 0006 0F92      		in r29,__SP_H__
+  88 0008 1124      	/* prologue: Signal */
+  89 000a DF93      	/* frame size = 0 */
+  91 000e CDB7      	.LM1:
+  92 0010 DEB7      		sts (FLAG)+1,__zero_reg__
+  93               		sts FLAG,__zero_reg__
+  94               	/* epilogue start */
+  14:spi.c         **** 	
+  15:spi.c         **** 	FLAG=0;
+  95               	.LFBB1
+  96               	.LM1:
+  97 0012 1092 0000 		sts (FLAG)+1,__zero_reg__
+  98 0016 1092 0000 		sts FLAG,__zero_reg__
+  99               	/* epilogue start */
+  16:spi.c         **** }
+ 100               	.LFBB1
+ 101               	.LM1:
+ 102 001a CF91      		sts (FLAG)+1,__zero_reg__
+ 103 001c DF91      		sts FLAG,__zero_reg__
+ 104 001e 0F90      	/* epilogue start */
+ 106 0022 0F90      	.LM2:
+ 107 0024 1F90      		pop r28
+ 108 0026 1895      		pop r29
+ 109               		pop r0
+ 110               		out __SREG__,r0
+ 111               		pop r0
+ 112               		pop __zero_reg__
+ 113               		reti
+  17:spi.c         **** 
+  18:spi.c         **** int main(void)
+  19:spi.c         **** {
+ 115               	EG__,r0
+ 116               		pop r0
+ 117               		pop __zero_reg__
+ 118 0028 DF93      		reti
+ 120 002c CDB7      	.Lscope1:
+ 122               	.global	main
+  20:spi.c         **** 	DDRB=(1<<PB3)|(1<<PB5);
+ 125               	.global	main
+ 127 0032 F0E0      	main:
+ 129 0036 8083      	.LM3:
+  21:spi.c         **** 	PORTB|=(1<<PB4);
+ 130               	ain
+ 132 0038 A8E3      	main:
+ 134 003c E8E3      	.LM3:
+ 135 003e F0E0      	.LFBB2:
+ 136 0040 8081      		push r29
+ 137 0042 8061      		push r28
+ 138 0044 8C93      		in r28,__SP_L__
+  22:spi.c         **** 	SPCR|=(1<<SPIE)|(1<<SPE)|(1<<MSTR);
+ 139               	.LM3-.LFBB2
+ 140               	.LM3:
+ 141 0046 ADE2      	.LFBB2:
+ 142 0048 B0E0      		push r29
+ 143 004a EDE2      		push r28
+ 144 004c F0E0      		in r28,__SP_L__
+ 145 004e 8081      		in r29,__SP_H__
+ 146 0050 806D      	/* prologue: function */
+ 147 0052 8C93      	/* frame size = 0 */
+  23:spi.c         ****    sei();
+ 148               	 r29,__SP_H__
+ 149               	/* prologue: function */
+ 150               	/* frame size = 0 */
+ 152 0054 7894      	.LM4:
+ 153               		ldi r30,lo8(55)
+ 154               		ldi r31,hi8(55)
+ 155               		ldi r24,lo8(40)
+  24:spi.c         ****    while(1)
+  25:spi.c         ****    {
+  26:spi.c         ****    	FLAG=1;
+ 156               	M4:
+ 157               		ldi r30,lo8(55)
+ 158 0056 81E0      		ldi r31,hi8(55)
+ 159 0058 90E0      		ldi r24,lo8(40)
+ 160 005a 9093 0000 		st Z,r24
+  27:spi.c         ****    	SPDR=i;
+ 162               	di r24,lo8(40)
+ 163               		st Z,r24
+ 165 0064 F0E0      	.LM5:
+ 166 0066 8091 0000 		ldi r26,lo8(56)
+ 167 006a 9091 0000 		ldi r27,hi8(56)
+ 168 006e 8083      		ldi r30,lo8(56)
+ 169               		ldi r31,hi8(56)
+  28:spi.c         ****    	while(FLAG);
+ 170               	i r27,hi8(56)
+ 171               		ldi r30,lo8(56)
+ 172 0070 8091 0000 		ldi r31,hi8(56)
+ 173 0074 9091 0000 		ld r24,Z
+ 174 0078 0097      		ori r24,lo8(16)
+ 175 007a 01F4      		st X,r24
+ 177               	.LM6:
+ 178               		ldi r26,lo8(45)
+ 179               		ldi r27,hi8(45)
+ 180               		ldi r30,lo8(45)
+ 181               		ldi r31,hi8(45)
+ 182               		ld r24,Z
+ 183               		ori r24,lo8(-48)
+DEFINED SYMBOLS
+                            *ABS*:00000000 spi.c
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:2      *ABS*:0000003f __SREG__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:5      *ABS*:00000034 __CCP__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:74     .data:00000000 i
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:80     .text:00000000 __vector_10
+                            *COM*:00000002 FLAG
+C:\Users\Mohit\AppData\Local\Temp/cc0b5MVd.s:114    .text:00000028 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

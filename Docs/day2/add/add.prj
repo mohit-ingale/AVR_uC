@@ -1,0 +1,7 @@
+
+.MICRO "Atmega8"
+.CLOCK 1meg
+.TRACE
+.STORE 100m
+
+.PROGRAM "add.hex"

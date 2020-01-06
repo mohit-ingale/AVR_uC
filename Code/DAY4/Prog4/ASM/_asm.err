@@ -1,0 +1,17 @@
+Creating   'pwm.eep'
+Creating   'pwm.hex'
+Creating   'pwm.obj'
+Creating   'pwm.lis'
+Creating   'pwm.map'
+
+Assembling 'pwm.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   39 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   39 words
+
+Assembly complete with no errors.
+Deleting   'pwm.eep'

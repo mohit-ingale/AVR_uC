@@ -1,0 +1,175 @@
+
+eeprom.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000f2  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         00000378  00000000  00000000  00000148  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000647  00000000  00000000  000004c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	2c c0       	rjmp	.+88     	; 0x5c <__bad_interrupt>
+   4:	2b c0       	rjmp	.+86     	; 0x5c <__bad_interrupt>
+   6:	2a c0       	rjmp	.+84     	; 0x5c <__bad_interrupt>
+   8:	29 c0       	rjmp	.+82     	; 0x5c <__bad_interrupt>
+   a:	28 c0       	rjmp	.+80     	; 0x5c <__bad_interrupt>
+   c:	27 c0       	rjmp	.+78     	; 0x5c <__bad_interrupt>
+   e:	26 c0       	rjmp	.+76     	; 0x5c <__bad_interrupt>
+  10:	25 c0       	rjmp	.+74     	; 0x5c <__bad_interrupt>
+  12:	24 c0       	rjmp	.+72     	; 0x5c <__bad_interrupt>
+  14:	23 c0       	rjmp	.+70     	; 0x5c <__bad_interrupt>
+  16:	22 c0       	rjmp	.+68     	; 0x5c <__bad_interrupt>
+  18:	21 c0       	rjmp	.+66     	; 0x5c <__bad_interrupt>
+  1a:	20 c0       	rjmp	.+64     	; 0x5c <__bad_interrupt>
+  1c:	1f c0       	rjmp	.+62     	; 0x5c <__bad_interrupt>
+  1e:	1e c0       	rjmp	.+60     	; 0x5c <__bad_interrupt>
+  20:	1d c0       	rjmp	.+58     	; 0x5c <__bad_interrupt>
+  22:	1c c0       	rjmp	.+56     	; 0x5c <__bad_interrupt>
+  24:	1b c0       	rjmp	.+54     	; 0x5c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	e2 ef       	ldi	r30, 0xF2	; 242
+  3a:	f0 e0       	ldi	r31, 0x00	; 0
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <.do_copy_data_start>
+
+0000003e <.do_copy_data_loop>:
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+
+00000042 <.do_copy_data_start>:
+  42:	a0 36       	cpi	r26, 0x60	; 96
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <.do_copy_data_loop>
+
+00000048 <__do_clear_bss>:
+  48:	10 e0       	ldi	r17, 0x00	; 0
+  4a:	a0 e6       	ldi	r26, 0x60	; 96
+  4c:	b0 e0       	ldi	r27, 0x00	; 0
+  4e:	01 c0       	rjmp	.+2      	; 0x52 <.do_clear_bss_start>
+
+00000050 <.do_clear_bss_loop>:
+  50:	1d 92       	st	X+, r1
+
+00000052 <.do_clear_bss_start>:
+  52:	a0 36       	cpi	r26, 0x60	; 96
+  54:	b1 07       	cpc	r27, r17
+  56:	e1 f7       	brne	.-8      	; 0x50 <.do_clear_bss_loop>
+  58:	02 d0       	rcall	.+4      	; 0x5e <main>
+  5a:	49 c0       	rjmp	.+146    	; 0xee <_exit>
+
+0000005c <__bad_interrupt>:
+  5c:	d1 cf       	rjmp	.-94     	; 0x0 <__vectors>
+
+0000005e <main>:
+#include <avr\io.h>              // Most basic include files
+#include <avr\interrupt.h>       // Add the necessary ones
+#include <avr\signal.h>          // here
+
+int main(void)
+{
+  5e:	df 93       	push	r29
+  60:	cf 93       	push	r28
+  62:	cd b7       	in	r28, 0x3d	; 61
+  64:	de b7       	in	r29, 0x3e	; 62
+	DDRD=0XFF;
+  66:	e1 e3       	ldi	r30, 0x31	; 49
+  68:	f0 e0       	ldi	r31, 0x00	; 0
+  6a:	8f ef       	ldi	r24, 0xFF	; 255
+  6c:	80 83       	st	Z, r24
+	while((EECR&0x02)!=0);
+  6e:	ec e3       	ldi	r30, 0x3C	; 60
+  70:	f0 e0       	ldi	r31, 0x00	; 0
+  72:	80 81       	ld	r24, Z
+  74:	88 2f       	mov	r24, r24
+  76:	90 e0       	ldi	r25, 0x00	; 0
+  78:	82 70       	andi	r24, 0x02	; 2
+  7a:	90 70       	andi	r25, 0x00	; 0
+  7c:	00 97       	sbiw	r24, 0x00	; 0
+  7e:	b9 f7       	brne	.-18     	; 0x6e <main+0x10>
+	EEARH=0X00;
+  80:	ef e3       	ldi	r30, 0x3F	; 63
+  82:	f0 e0       	ldi	r31, 0x00	; 0
+  84:	10 82       	st	Z, r1
+	EEARL=0X5F;
+  86:	ee e3       	ldi	r30, 0x3E	; 62
+  88:	f0 e0       	ldi	r31, 0x00	; 0
+  8a:	8f e5       	ldi	r24, 0x5F	; 95
+  8c:	80 83       	st	Z, r24
+	EEDR=0X56;
+  8e:	ed e3       	ldi	r30, 0x3D	; 61
+  90:	f0 e0       	ldi	r31, 0x00	; 0
+  92:	86 e5       	ldi	r24, 0x56	; 86
+  94:	80 83       	st	Z, r24
+	EECR|=(1<<EEMWE);
+  96:	ac e3       	ldi	r26, 0x3C	; 60
+  98:	b0 e0       	ldi	r27, 0x00	; 0
+  9a:	ec e3       	ldi	r30, 0x3C	; 60
+  9c:	f0 e0       	ldi	r31, 0x00	; 0
+  9e:	80 81       	ld	r24, Z
+  a0:	84 60       	ori	r24, 0x04	; 4
+  a2:	8c 93       	st	X, r24
+	EECR|=(1<<EEWE);
+  a4:	ac e3       	ldi	r26, 0x3C	; 60
+  a6:	b0 e0       	ldi	r27, 0x00	; 0
+  a8:	ec e3       	ldi	r30, 0x3C	; 60
+  aa:	f0 e0       	ldi	r31, 0x00	; 0
+  ac:	80 81       	ld	r24, Z
+  ae:	82 60       	ori	r24, 0x02	; 2
+  b0:	8c 93       	st	X, r24
+	while((EECR&0X02)!=0);
+  b2:	ec e3       	ldi	r30, 0x3C	; 60
+  b4:	f0 e0       	ldi	r31, 0x00	; 0
+  b6:	80 81       	ld	r24, Z
+  b8:	88 2f       	mov	r24, r24
+  ba:	90 e0       	ldi	r25, 0x00	; 0
+  bc:	82 70       	andi	r24, 0x02	; 2
+  be:	90 70       	andi	r25, 0x00	; 0
+  c0:	00 97       	sbiw	r24, 0x00	; 0
+  c2:	b9 f7       	brne	.-18     	; 0xb2 <main+0x54>
+	EEARH=0X00;
+  c4:	ef e3       	ldi	r30, 0x3F	; 63
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	10 82       	st	Z, r1
+	EEARL=0X5F;
+  ca:	ee e3       	ldi	r30, 0x3E	; 62
+  cc:	f0 e0       	ldi	r31, 0x00	; 0
+  ce:	8f e5       	ldi	r24, 0x5F	; 95
+  d0:	80 83       	st	Z, r24
+	EECR|=(1<<EERE);
+  d2:	ac e3       	ldi	r26, 0x3C	; 60
+  d4:	b0 e0       	ldi	r27, 0x00	; 0
+  d6:	ec e3       	ldi	r30, 0x3C	; 60
+  d8:	f0 e0       	ldi	r31, 0x00	; 0
+  da:	80 81       	ld	r24, Z
+  dc:	81 60       	ori	r24, 0x01	; 1
+  de:	8c 93       	st	X, r24
+	PORTD=EEDR;
+  e0:	a2 e3       	ldi	r26, 0x32	; 50
+  e2:	b0 e0       	ldi	r27, 0x00	; 0
+  e4:	ed e3       	ldi	r30, 0x3D	; 61
+  e6:	f0 e0       	ldi	r31, 0x00	; 0
+  e8:	80 81       	ld	r24, Z
+  ea:	8c 93       	st	X, r24
+  ec:	ff cf       	rjmp	.-2      	; 0xec <main+0x8e>
+
+000000ee <_exit>:
+  ee:	f8 94       	cli
+
+000000f0 <__stop_program>:
+  f0:	ff cf       	rjmp	.-2      	; 0xf0 <__stop_program>

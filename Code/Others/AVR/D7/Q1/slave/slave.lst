@@ -1,0 +1,103 @@
+   1               		.file	"slave.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	main
+  73               	main:
+   1:slave.c       **** // ***********************************************************
+   2:slave.c       **** // Project:
+   3:slave.c       **** // Author:
+   4:slave.c       **** // Module description:
+   5:slave.c       **** // ***********************************************************
+   6:slave.c       **** 
+   7:slave.c       **** #include <avr\io.h>              // Most basic include files
+   8:slave.c       **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:slave.c       **** #include <avr\signal.h>          // here
+  10:slave.c       ****  #define MISO 6
+  11:slave.c       **** 
+  12:slave.c       **** 
+  13:slave.c       **** // ***********************************************************
+  14:slave.c       **** // Main program
+  15:slave.c       **** //
+  16:slave.c       **** int main(void)
+  17:slave.c       ****  {
+  74               	7,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 DF93      		push r29
+  78 0002 CF93      		push r28
+  79 0004 CDB7      		in r28,__SP_L__
+  80 0006 DEB7      		in r29,__SP_H__
+  81               	/* prologue: function */
+  82               	/* frame size = 0 */
+  18:slave.c       ****       DDRC=0XFF;
+  83               	8,0,18,.LM1-.LFBB1
+  84               	.LM1:
+  85 0008 E4E3      		ldi r30,lo8(52)
+  86 000a F0E0      		ldi r31,hi8(52)
+  87 000c 8FEF      		ldi r24,lo8(-1)
+  88 000e 8083      		st Z,r24
+  19:slave.c       ****       DDRB=(1<<MISO);
+  89               	n	68,0,19,.LM2-.LFBB1
+  90               	.LM2:
+  91 0010 E7E3      		ldi r30,lo8(55)
+  92 0012 F0E0      		ldi r31,hi8(55)
+  93 0014 80E4      		ldi r24,lo8(64)
+  94 0016 8083      		st Z,r24
+  20:slave.c       ****       SPCR=(1<<SPE);
+  95               	n	68,0,20,.LM3-.LFBB1
+  96               	.LM3:
+  97 0018 EDE2      		ldi r30,lo8(45)
+  98 001a F0E0      		ldi r31,hi8(45)
+  99 001c 80E4      		ldi r24,lo8(64)
+ 100 001e 8083      		st Z,r24
+ 101               	.L3:
+  21:slave.c       ****       while(1)
+  22:slave.c       ****      		 {
+  23:slave.c       ****             SPDR='b';
+ 102               	r24,lo8(64)
+ 103               		st Z,r24
+ 104 0020 EFE2      	.L3:
+ 106 0024 82E6      	.LM4:
+ 107 0026 8083      		ldi r30,lo8(47)
+ 108               		ldi r31,hi8(47)
+  24:slave.c       ****             while(!(SPSR&(1<<SPIF)));
+ 109               	8(47)
+ 110               		ldi r31,hi8(47)
+ 111 0028 EEE2      		ldi r24,lo8(98)
+ 112 002a F0E0      		st Z,r24
+ 113 002c 8081      	.L2:
+ 115 0030 04F4      	.LM5:
+  25:slave.c       ****             PORTC=SPDR;		
+ 116               	.LM5-.LFBB1
+ 117               	.LM5:
+ 118 0032 E5E3      		ldi r30,lo8(46)
+ 119 0034 F0E0      		ldi r31,hi8(46)
+ 120 0036 AFE2      		ld r24,Z
+ 121 0038 B0E0      		tst r24
+ 122 003a 8C91      		brge .L2
+ 124 003e 00C0      	.LM6:
+ 125               		ldi r30,lo8(53)
+ 126               		ldi r31,hi8(53)
+ 127               		ldi r26,lo8(47)
+ 128               		ldi r27,hi8(47)
+DEFINED SYMBOLS
+                            *ABS*:00000000 slave.c
+C:\users\cdac1\Temp/ccgVcec3.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccgVcec3.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccgVcec3.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccgVcec3.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccgVcec3.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccgVcec3.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccgVcec3.s:73     .text:00000000 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

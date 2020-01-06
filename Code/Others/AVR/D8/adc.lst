@@ -1,0 +1,174 @@
+   1               		.file	"adc.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_14
+  73               	__vector_14:
+   1:adc.c         **** // ***********************************************************
+   2:adc.c         **** // Project:
+   3:adc.c         **** // Author:
+   4:adc.c         **** // Module description:
+   5:adc.c         **** // ***********************************************************
+   6:adc.c         **** 
+   7:adc.c         **** #include <avr\io.h>              // Most basic include files
+   8:adc.c         **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:adc.c         **** #include <avr\signal.h>          // here
+  10:adc.c         **** 
+  11:adc.c         **** ISR(ADC_vect)
+  12:adc.c         **** {	PORTD=ADCL;
+  74               	2,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a 8F93      		push r24
+  83 000c AF93      		push r26
+  84 000e BF93      		push r27
+  85 0010 EF93      		push r30
+  86 0012 FF93      		push r31
+  87 0014 DF93      		push r29
+  88 0016 CF93      		push r28
+  89 0018 CDB7      		in r28,__SP_L__
+  90 001a DEB7      		in r29,__SP_H__
+  91               	/* prologue: Signal */
+  92               	/* frame size = 0 */
+  94               	.LM1:
+  95 001c A2E3      		ldi r26,lo8(50)
+  96 001e B0E0      		ldi r27,hi8(50)
+  97 0020 E4E2      		ldi r30,lo8(36)
+  98 0022 F0E0      		ldi r31,hi8(36)
+  99 0024 8081      		ld r24,Z
+ 100 0026 8C93      		st X,r24
+  13:adc.c         **** 	PORTB=ADCH;
+ 101               	
+ 102               	.LM2:
+ 103 0028 A8E3      		ldi r26,lo8(56)
+ 104 002a B0E0      		ldi r27,hi8(56)
+ 105 002c E5E2      		ldi r30,lo8(37)
+ 106 002e F0E0      		ldi r31,hi8(37)
+ 107 0030 8081      		ld r24,Z
+ 108 0032 8C93      		st X,r24
+  14:adc.c         **** 	ADCSRA|=(1<<ADSC);
+ 109               		68,0,14,.LM3-.LFBB1
+ 110               	.LM3:
+ 111 0034 A6E2      		ldi r26,lo8(38)
+ 112 0036 B0E0      		ldi r27,hi8(38)
+ 113 0038 E6E2      		ldi r30,lo8(38)
+ 114 003a F0E0      		ldi r31,hi8(38)
+ 115 003c 8081      		ld r24,Z
+ 116 003e 8064      		ori r24,lo8(64)
+ 117 0040 8C93      		st X,r24
+ 118               	/* epilogue start */
+  15:adc.c         **** }
+ 119               	,0,15,.LM4-.LFBB1
+ 120               	.LM4:
+ 121 0042 CF91      		pop r28
+ 122 0044 DF91      		pop r29
+ 123 0046 FF91      		pop r31
+ 124 0048 EF91      		pop r30
+ 125 004a BF91      		pop r27
+ 126 004c AF91      		pop r26
+ 127 004e 8F91      		pop r24
+ 128 0050 0F90      		pop r0
+ 129 0052 0FBE      		out __SREG__,r0
+ 130 0054 0F90      		pop r0
+ 131 0056 1F90      		pop __zero_reg__
+ 132 0058 1895      		reti
+ 134               	.Lscope1:
+ 136               	.global	main
+ 138               	main:
+  16:adc.c         **** 
+  17:adc.c         **** 
+  18:adc.c         **** // ***********************************************************
+  19:adc.c         **** // Main program
+  20:adc.c         **** //
+  21:adc.c         **** int main(void)
+  22:adc.c         ****  {
+ 139               	-.LFBB2
+ 140               	.LM5:
+ 141               	.LFBB2:
+ 142 005a DF93      		push r29
+ 143 005c CF93      		push r28
+ 144 005e CDB7      		in r28,__SP_L__
+ 145 0060 DEB7      		in r29,__SP_H__
+ 146               	/* prologue: function */
+ 147               	/* frame size = 0 */
+  23:adc.c         ****    DDRB=0XFF;
+ 148               	8,0,23,.LM6-.LFBB2
+ 149               	.LM6:
+ 150 0062 E7E3      		ldi r30,lo8(55)
+ 151 0064 F0E0      		ldi r31,hi8(55)
+ 152 0066 8FEF      		ldi r24,lo8(-1)
+ 153 0068 8083      		st Z,r24
+  24:adc.c         ****    DDRD=0XFF;
+ 154               	n	68,0,24,.LM7-.LFBB2
+ 155               	.LM7:
+ 156 006a E1E3      		ldi r30,lo8(49)
+ 157 006c F0E0      		ldi r31,hi8(49)
+ 158 006e 8FEF      		ldi r24,lo8(-1)
+ 159 0070 8083      		st Z,r24
+  25:adc.c         ****    DDRC=0X00;
+ 160               	n	68,0,25,.LM8-.LFBB2
+ 161               	.LM8:
+ 162 0072 E4E3      		ldi r30,lo8(52)
+ 163 0074 F0E0      		ldi r31,hi8(52)
+ 164 0076 1082      		st Z,__zero_reg__
+  26:adc.c         ****    sei();
+ 165               	bn	68,0,26,.LM9-.LFBB2
+ 166               	.LM9:
+ 167               	/* #APP */
+ 168               	 ;  26 "adc.c" 1
+ 169 0078 7894      		sei
+ 170               	 ;  0 "" 2
+  27:adc.c         ****    ADCSRA=0X8F;
+ 171               	6 "adc.c" 1
+ 172               		sei
+ 173               	 ;  0 "" 2
+ 175 007c F0E0      	.LM10:
+ 176 007e 8FE8      	/* #NOAPP */
+ 177 0080 8083      		ldi r30,lo8(38)
+  28:adc.c         ****    ADMUX=0XC0;
+ 178               	APP */
+ 179               		ldi r30,lo8(38)
+ 180 0082 E7E2      		ldi r31,hi8(38)
+ 181 0084 F0E0      		ldi r24,lo8(-113)
+ 182 0086 80EC      		st Z,r24
+  29:adc.c         ****    ADCSRA|=(1<<ADSC);
+ 184               	8,0,28,.LM11-.LFBB2
+ 185               	.LM11:
+ 186 008a A6E2      		ldi r30,lo8(39)
+ 187 008c B0E0      		ldi r31,hi8(39)
+ 188 008e E6E2      		ldi r24,lo8(-64)
+ 189 0090 F0E0      		st Z,r24
+ 191 0094 8064      	.LM12:
+ 192 0096 8C93      		ldi r26,lo8(38)
+ 193               		ldi r27,hi8(38)
+ 194 0098 00C0      		ldi r30,lo8(38)
+ 195               		ldi r31,hi8(38)
+ 196               		ld r24,Z
+ 197               		ori r24,lo8(64)
+ 198               		st X,r24
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc.c
+C:\users\cdac1\Temp/ccp2xESL.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccp2xESL.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccp2xESL.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccp2xESL.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccp2xESL.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccp2xESL.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccp2xESL.s:73     .text:00000000 __vector_14
+C:\users\cdac1\Temp/ccp2xESL.s:138    .text:0000005a main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

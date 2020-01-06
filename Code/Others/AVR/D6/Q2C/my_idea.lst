@@ -1,0 +1,188 @@
+   1               		.file	"my_idea.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	my_function
+  73               	my_function:
+   1:my_idea.c     **** // ***********************************************************
+   2:my_idea.c     **** // Project:
+   3:my_idea.c     **** // Author:
+   4:my_idea.c     **** // Module description:
+   5:my_idea.c     **** // ***********************************************************
+   6:my_idea.c     **** 
+   7:my_idea.c     **** #include <avr\io.h>              // Most basic include files
+   8:my_idea.c     **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:my_idea.c     **** #include <avr\signal.h>          // here
+  10:my_idea.c     **** 
+  11:my_idea.c     **** // Define here the global static variables
+  12:my_idea.c     **** //
+  13:my_idea.c     **** int My_global;
+  14:my_idea.c     **** 
+  15:my_idea.c     **** // Interrupt handler example for INT0
+  16:my_idea.c     **** //
+  17:my_idea.c     **** //SIGNAL(SIG_INTERRUPT0) {
+  18:my_idea.c     **** 
+  19:my_idea.c     **** //}
+  20:my_idea.c     **** 
+  21:my_idea.c     **** // It is recommended to use this coding style to
+  22:my_idea.c     **** // follow better the mixed C-assembly code in the
+  23:my_idea.c     **** // Program Memory window
+  24:my_idea.c     **** //
+  25:my_idea.c     **** void my_function(void) {  // Put the open brace '{' here
+  74               	5,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 DF93      		push r29
+  78 0002 CF93      		push r28
+  79 0004 CDB7      		in r28,__SP_L__
+  80 0006 DEB7      		in r29,__SP_H__
+  81               	/* prologue: function */
+  82               	/* frame size = 0 */
+  26:my_idea.c     **** 
+  27:my_idea.c     ****    asm("nop");          // Inline assembly example
+  83               	8,0,27,.LM1-.LFBB1
+  84               	.LM1:
+  85               	/* #APP */
+  86               	 ;  27 "my_idea.c" 1
+  87 0008 0000      		nop
+  88               	 ;  0 "" 2
+  89               	/* epilogue start */
+  28:my_idea.c     **** }
+  90               		68,0,28,.LM2-.LFBB1
+  91               	.LM2:
+  92               	/* #NOAPP */
+  93 000a CF91      		pop r28
+  94 000c DF91      		pop r29
+  95 000e 0895      		ret
+  97               	.Lscope1:
+  99               	.global	main
+ 101               	main:
+  29:my_idea.c     **** 
+  30:my_idea.c     **** // ***********************************************************
+  31:my_idea.c     **** // Main program
+  32:my_idea.c     **** //
+  33:my_idea.c     **** int main(void)
+  34:my_idea.c     ****  {
+ 102               	,34,.LM3-.LFBB2
+ 103               	.LM3:
+ 104               	.LFBB2:
+ 105 0010 DF93      		push r29
+ 106 0012 CF93      		push r28
+ 107 0014 CDB7      		in r28,__SP_L__
+ 108 0016 DEB7      		in r29,__SP_H__
+ 109               	/* prologue: function */
+ 110               	/* frame size = 0 */
+  35:my_idea.c     **** 
+  36:my_idea.c     ****    DDRD =1<<4;
+ 111               	8,0,36,.LM4-.LFBB2
+ 112               	.LM4:
+ 113 0018 E1E3      		ldi r30,lo8(49)
+ 114 001a F0E0      		ldi r31,hi8(49)
+ 115 001c 80E1      		ldi r24,lo8(16)
+ 116 001e 8083      		st Z,r24
+  37:my_idea.c     ****   PORTD=1<<2;
+ 117               	n	68,0,37,.LM5-.LFBB2
+ 118               	.LM5:
+ 119 0020 E2E3      		ldi r30,lo8(50)
+ 120 0022 F0E0      		ldi r31,hi8(50)
+ 121 0024 84E0      		ldi r24,lo8(4)
+ 122 0026 8083      		st Z,r24
+  38:my_idea.c     ****   GICR= (1<<INT0);
+ 123               	n	68,0,38,.LM6-.LFBB2
+ 124               	.LM6:
+ 125 0028 EBE5      		ldi r30,lo8(91)
+ 126 002a F0E0      		ldi r31,hi8(91)
+ 127 002c 80E4      		ldi r24,lo8(64)
+ 128 002e 8083      		st Z,r24
+  39:my_idea.c     ****   sei();
+ 129               	n	68,0,39,.LM7-.LFBB2
+ 130               	.LM7:
+ 131               	/* #APP */
+ 132               	 ;  39 "my_idea.c" 1
+ 133 0030 7894      		sei
+ 134               	 ;  0 "" 2
+ 135               	/* #NOAPP */
+ 136               	.L4:
+ 137 0032 00C0      		rjmp .L4
+ 139               	.Lscope2:
+ 141               	.global	__vector_1
+ 143               	__vector_1:
+  40:my_idea.c     ****   while(1);
+  41:my_idea.c     ****    }
+  42:my_idea.c     **** 
+  43:my_idea.c     **** ISR(INT0_vect)
+  44:my_idea.c     **** {
+ 144               	,.LM8-.LFBB3
+ 145               	.LM8:
+ 146               	.LFBB3:
+ 147 0034 1F92      		push __zero_reg__
+ 148 0036 0F92      		push r0
+ 149 0038 0FB6      		in r0,__SREG__
+ 150 003a 0F92      		push r0
+ 151 003c 1124      		clr __zero_reg__
+ 152 003e 8F93      		push r24
+ 153 0040 9F93      		push r25
+ 154 0042 AF93      		push r26
+ 155 0044 BF93      		push r27
+ 156 0046 EF93      		push r30
+ 157 0048 FF93      		push r31
+ 158 004a DF93      		push r29
+ 159 004c CF93      		push r28
+ 160 004e CDB7      		in r28,__SP_L__
+ 161 0050 DEB7      		in r29,__SP_H__
+ 162               	/* prologue: Signal */
+ 163               	/* frame size = 0 */
+  45:my_idea.c     ****   PORTD^=(1<<4);
+ 164               	-.LFBB3
+ 165               	.LM9:
+ 166 0052 A2E3      		ldi r26,lo8(50)
+ 167 0054 B0E0      		ldi r27,hi8(50)
+ 168 0056 E2E3      		ldi r30,lo8(50)
+ 169 0058 F0E0      		ldi r31,hi8(50)
+ 170 005a 9081      		ld r25,Z
+ 171 005c 80E1      		ldi r24,lo8(16)
+ 172 005e 8927      		eor r24,r25
+ 173 0060 8C93      		st X,r24
+ 174               	/* epilogue start */
+  46:my_idea.c     **** 
+  47:my_idea.c     **** }
+ 175               	/* epilogue start */
+ 177 0062 CF91      	.LM10:
+ 178 0064 DF91      		pop r28
+ 179 0066 FF91      		pop r29
+ 180 0068 EF91      		pop r31
+ 181 006a BF91      		pop r30
+ 182 006c AF91      		pop r27
+ 183 006e 9F91      		pop r26
+ 184 0070 8F91      		pop r25
+ 185 0072 0F90      		pop r24
+ 186 0074 0FBE      		pop r0
+ 187 0076 0F90      		out __SREG__,r0
+ 188 0078 1F90      		pop r0
+ 189 007a 1895      		pop __zero_reg__
+ 190               		reti
+ 192               	.Lscope3:
+ 193               		.comm My_global,2,1
+DEFINED SYMBOLS
+                            *ABS*:00000000 my_idea.c
+C:\users\cdac1\Temp/ccI66x2G.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccI66x2G.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccI66x2G.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccI66x2G.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccI66x2G.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccI66x2G.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccI66x2G.s:73     .text:00000000 my_function
+C:\users\cdac1\Temp/ccI66x2G.s:101    .text:00000010 main
+C:\users\cdac1\Temp/ccI66x2G.s:143    .text:00000034 __vector_1
+                            *COM*:00000002 My_global
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

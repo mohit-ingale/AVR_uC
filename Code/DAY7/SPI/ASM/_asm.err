@@ -1,0 +1,17 @@
+Creating   'spi_sl.eep'
+Creating   'spi_sl.hex'
+Creating   'spi_sl.obj'
+Creating   'spi_sl.lis'
+Creating   'spi_sl.map'
+
+Assembling 'spi_sl.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   34 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   34 words
+
+Assembly complete with no errors.
+Deleting   'spi_sl.eep'

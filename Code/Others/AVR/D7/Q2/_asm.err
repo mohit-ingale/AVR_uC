@@ -1,0 +1,17 @@
+Creating   'eeprom.eep'
+Creating   'eeprom.hex'
+Creating   'eeprom.obj'
+Creating   'eeprom.lis'
+Creating   'eeprom.map'
+
+Assembling 'eeprom.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   43 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   43 words
+
+Assembly complete with no errors.
+Deleting   'eeprom.eep'

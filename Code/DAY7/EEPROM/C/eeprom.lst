@@ -1,0 +1,156 @@
+   1               		.file	"eeprom.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	main
+  73               	main:
+   1:eeprom.c      **** // ***********************************************************
+   2:eeprom.c      **** // Project:
+   3:eeprom.c      **** // Author:
+   4:eeprom.c      **** // Module description:
+   5:eeprom.c      **** // ***********************************************************
+   6:eeprom.c      **** 
+   7:eeprom.c      **** #include <avr\io.h>              // Most basic include files
+   8:eeprom.c      **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:eeprom.c      **** #include <avr\signal.h>          // here
+  10:eeprom.c      **** 
+  11:eeprom.c      **** int main(void)
+  12:eeprom.c      **** {
+  74               	2,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 DF93      		push r29
+  78 0002 CF93      		push r28
+  79 0004 CDB7      		in r28,__SP_L__
+  80 0006 DEB7      		in r29,__SP_H__
+  81               	/* prologue: function */
+  82               	/* frame size = 0 */
+  13:eeprom.c      **** 	DDRD=0XFF;
+  83               	8,0,13,.LM1-.LFBB1
+  84               	.LM1:
+  85 0008 E1E3      		ldi r30,lo8(49)
+  86 000a F0E0      		ldi r31,hi8(49)
+  87 000c 8FEF      		ldi r24,lo8(-1)
+  88 000e 8083      		st Z,r24
+  89               	.L2:
+  14:eeprom.c      **** 	while((EECR&0x02)!=0);
+  90               		68,0,14,.LM2-.LFBB1
+  91               	.LM2:
+  92 0010 ECE3      		ldi r30,lo8(60)
+  93 0012 F0E0      		ldi r31,hi8(60)
+  94 0014 8081      		ld r24,Z
+  95 0016 882F      		mov r24,r24
+  96 0018 90E0      		ldi r25,lo8(0)
+  97 001a 8270      		andi r24,lo8(2)
+  98 001c 9070      		andi r25,hi8(2)
+  99 001e 0097      		sbiw r24,0
+ 100 0020 01F4      		brne .L2
+  15:eeprom.c      **** 	EEARH=0X00;
+ 101               	0,15,.LM3-.LFBB1
+ 102               	.LM3:
+ 103 0022 EFE3      		ldi r30,lo8(63)
+ 104 0024 F0E0      		ldi r31,hi8(63)
+ 105 0026 1082      		st Z,__zero_reg__
+  16:eeprom.c      **** 	EEARL=0X5F;
+ 106               	bn	68,0,16,.LM4-.LFBB1
+ 107               	.LM4:
+ 108 0028 EEE3      		ldi r30,lo8(62)
+ 109 002a F0E0      		ldi r31,hi8(62)
+ 110 002c 8FE5      		ldi r24,lo8(95)
+ 111 002e 8083      		st Z,r24
+  17:eeprom.c      **** 	EEDR=0X56;
+ 112               	n	68,0,17,.LM5-.LFBB1
+ 113               	.LM5:
+ 114 0030 EDE3      		ldi r30,lo8(61)
+ 115 0032 F0E0      		ldi r31,hi8(61)
+ 116 0034 86E5      		ldi r24,lo8(86)
+ 117 0036 8083      		st Z,r24
+  18:eeprom.c      **** 	EECR|=(1<<EEMWE);
+ 118               	n	68,0,18,.LM6-.LFBB1
+ 119               	.LM6:
+ 120 0038 ACE3      		ldi r26,lo8(60)
+ 121 003a B0E0      		ldi r27,hi8(60)
+ 122 003c ECE3      		ldi r30,lo8(60)
+ 123 003e F0E0      		ldi r31,hi8(60)
+ 124 0040 8081      		ld r24,Z
+ 125 0042 8460      		ori r24,lo8(4)
+ 126 0044 8C93      		st X,r24
+  19:eeprom.c      **** 	EECR|=(1<<EEWE);
+ 127               	8,0,19,.LM7-.LFBB1
+ 128               	.LM7:
+ 129 0046 ACE3      		ldi r26,lo8(60)
+ 130 0048 B0E0      		ldi r27,hi8(60)
+ 131 004a ECE3      		ldi r30,lo8(60)
+ 132 004c F0E0      		ldi r31,hi8(60)
+ 133 004e 8081      		ld r24,Z
+ 134 0050 8260      		ori r24,lo8(2)
+ 135 0052 8C93      		st X,r24
+ 136               	.L3:
+  20:eeprom.c      **** 	while((EECR&0X02)!=0);
+ 137               	,0,20,.LM8-.LFBB1
+ 138               	.LM8:
+ 139 0054 ECE3      		ldi r30,lo8(60)
+ 140 0056 F0E0      		ldi r31,hi8(60)
+ 141 0058 8081      		ld r24,Z
+ 142 005a 882F      		mov r24,r24
+ 143 005c 90E0      		ldi r25,lo8(0)
+ 144 005e 8270      		andi r24,lo8(2)
+ 145 0060 9070      		andi r25,hi8(2)
+ 146 0062 0097      		sbiw r24,0
+ 147 0064 01F4      		brne .L3
+  21:eeprom.c      **** 	EEARH=0X00;
+ 148               	0,21,.LM9-.LFBB1
+ 149               	.LM9:
+ 150 0066 EFE3      		ldi r30,lo8(63)
+ 151 0068 F0E0      		ldi r31,hi8(63)
+ 152 006a 1082      		st Z,__zero_reg__
+  22:eeprom.c      **** 	EEARL=0X5F;
+ 153               	bn	68,0,22,.LM10-.LFBB1
+ 154               	.LM10:
+ 155 006c EEE3      		ldi r30,lo8(62)
+ 156 006e F0E0      		ldi r31,hi8(62)
+ 157 0070 8FE5      		ldi r24,lo8(95)
+ 158 0072 8083      		st Z,r24
+  23:eeprom.c      **** 	EECR|=(1<<EERE);
+ 159               	 r24,lo8(95)
+ 160               		st Z,r24
+ 162 0076 B0E0      	.LM11:
+ 163 0078 ECE3      		ldi r26,lo8(60)
+ 164 007a F0E0      		ldi r27,hi8(60)
+ 165 007c 8081      		ldi r30,lo8(60)
+ 166 007e 8160      		ldi r31,hi8(60)
+ 167 0080 8C93      		ld r24,Z
+  24:eeprom.c      **** 	PORTD=EEDR;
+ 168               	8(60)
+ 169               		ld r24,Z
+ 170 0082 A2E3      		ori r24,lo8(1)
+ 171 0084 B0E0      		st X,r24
+ 173 0088 F0E0      	.LM12:
+ 174 008a 8081      		ldi r26,lo8(50)
+ 175 008c 8C93      		ldi r27,hi8(50)
+ 176               		ldi r30,lo8(61)
+ 177 008e 00C0      		ldi r31,hi8(61)
+ 178               		ld r24,Z
+ 179               		st X,r24
+ 180               	.L4:
+ 181               		rjmp .L4
+DEFINED SYMBOLS
+                            *ABS*:00000000 eeprom.c
+C:\users\cdac1\Temp/ccAbSmFh.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccAbSmFh.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccAbSmFh.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccAbSmFh.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccAbSmFh.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccAbSmFh.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccAbSmFh.s:73     .text:00000000 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

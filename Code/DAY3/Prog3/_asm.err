@@ -1,0 +1,17 @@
+Creating   'sort.eep'
+Creating   'sort.hex'
+Creating   'sort.obj'
+Creating   'sort.lis'
+Creating   'sort.map'
+
+Assembling 'sort.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   92 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   92 words
+
+Assembly complete with no errors.
+Deleting   'sort.eep'

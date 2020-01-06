@@ -1,0 +1,72 @@
+set -e; avr-gcc -MM -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=dtog.lst   dtog.c \
+	| sed 's,\(.*\)\.o[ :]*,\1.o \1.d : ,g' > dtog.d; \
+	[ -s dtog.d ] || rm -f dtog.d
+
+-------- begin --------
+avr-gcc (WinAVR 20080610) 4.3.0
+Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Size before:
+dtog.elf  :
+section    size      addr
+.text       418         0
+.data         2   8388704
+.bss          2   8388706
+.stab      1164         0
+.stabstr   1705         0
+Total      3291
+
+
+
+
+Compiling: dtog.c
+avr-gcc -c -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=dtog.lst   dtog.c -o dtog.o
+In file included from dtog.c:9:
+c:/winavr/lib/gcc/../../avr/include/avr\signal.h:36:2: warning: #warning "This header file is obsolete.  Use <avr/interrupt.h>."
+
+Linking: dtog.elf
+avr-gcc -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=dtog.o   dtog.o  --output dtog.elf -lm -Wl,-Map=dtog.map -Wl,--cref
+
+Creating load file for Flash: dtog.hex
+avr-objcopy -O ihex -R .eeprom dtog.elf dtog.hex
+
+Creating load file for EEPROM: dtog.eep
+avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	--change-section-lma .eeprom=0 -O ihex dtog.elf dtog.eep
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom=0x00000000 never used
+
+Creating Extended Listing: dtog.lss
+avr-objdump -h -S dtog.elf > dtog.lss
+
+Creating Symbol Table: dtog.sym
+avr-nm -n dtog.elf > dtog.sym
+
+Converting to AVR COFF: dtog.cof
+avr-objcopy --debugging --change-section-address .data-0x800000 --change-section-address .bss-0x800000 --change-section-address .noinit-0x800000 --change-section-address .eeprom-0x810000 -O coff-ext-avr dtog.elf dtog.cof   # Extended COFF. Supported in VMLAB from rel. 3.10
+Discarding local symbol outside any compilation unit: .do_copy_data_start
+Discarding local symbol outside any compilation unit: .do_copy_data_loop
+Discarding local symbol outside any compilation unit: .do_clear_bss_start
+Discarding local symbol outside any compilation unit: .do_clear_bss_loop
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .noinit+0xff800000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .noinit+0xff800000 never used
+
+Size after:
+dtog.elf  :
+section    size      addr
+.text       446         0
+.data         2   8388704
+.bss          2   8388706
+.stab      1200         0
+.stabstr   1705         0
+Total      3355
+
+
+
+Errors: none
+-------- end --------
+

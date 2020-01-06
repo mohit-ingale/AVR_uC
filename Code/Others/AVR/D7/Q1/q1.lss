@@ -1,0 +1,132 @@
+
+q1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000a2  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         00000330  00000000  00000000  000000f8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000643  00000000  00000000  00000428  2**0
+                  CONTENTS, READONLY, DEBUGGING
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	2c c0       	rjmp	.+88     	; 0x5c <__bad_interrupt>
+   4:	2b c0       	rjmp	.+86     	; 0x5c <__bad_interrupt>
+   6:	2a c0       	rjmp	.+84     	; 0x5c <__bad_interrupt>
+   8:	29 c0       	rjmp	.+82     	; 0x5c <__bad_interrupt>
+   a:	28 c0       	rjmp	.+80     	; 0x5c <__bad_interrupt>
+   c:	27 c0       	rjmp	.+78     	; 0x5c <__bad_interrupt>
+   e:	26 c0       	rjmp	.+76     	; 0x5c <__bad_interrupt>
+  10:	25 c0       	rjmp	.+74     	; 0x5c <__bad_interrupt>
+  12:	24 c0       	rjmp	.+72     	; 0x5c <__bad_interrupt>
+  14:	23 c0       	rjmp	.+70     	; 0x5c <__bad_interrupt>
+  16:	22 c0       	rjmp	.+68     	; 0x5c <__bad_interrupt>
+  18:	21 c0       	rjmp	.+66     	; 0x5c <__bad_interrupt>
+  1a:	20 c0       	rjmp	.+64     	; 0x5c <__bad_interrupt>
+  1c:	1f c0       	rjmp	.+62     	; 0x5c <__bad_interrupt>
+  1e:	1e c0       	rjmp	.+60     	; 0x5c <__bad_interrupt>
+  20:	1d c0       	rjmp	.+58     	; 0x5c <__bad_interrupt>
+  22:	1c c0       	rjmp	.+56     	; 0x5c <__bad_interrupt>
+  24:	1b c0       	rjmp	.+54     	; 0x5c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	e2 ea       	ldi	r30, 0xA2	; 162
+  3a:	f0 e0       	ldi	r31, 0x00	; 0
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <.do_copy_data_start>
+
+0000003e <.do_copy_data_loop>:
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+
+00000042 <.do_copy_data_start>:
+  42:	a0 36       	cpi	r26, 0x60	; 96
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <.do_copy_data_loop>
+
+00000048 <__do_clear_bss>:
+  48:	10 e0       	ldi	r17, 0x00	; 0
+  4a:	a0 e6       	ldi	r26, 0x60	; 96
+  4c:	b0 e0       	ldi	r27, 0x00	; 0
+  4e:	01 c0       	rjmp	.+2      	; 0x52 <.do_clear_bss_start>
+
+00000050 <.do_clear_bss_loop>:
+  50:	1d 92       	st	X+, r1
+
+00000052 <.do_clear_bss_start>:
+  52:	a0 36       	cpi	r26, 0x60	; 96
+  54:	b1 07       	cpc	r27, r17
+  56:	e1 f7       	brne	.-8      	; 0x50 <.do_clear_bss_loop>
+  58:	02 d0       	rcall	.+4      	; 0x5e <main>
+  5a:	21 c0       	rjmp	.+66     	; 0x9e <_exit>
+
+0000005c <__bad_interrupt>:
+  5c:	d1 cf       	rjmp	.-94     	; 0x0 <__vectors>
+
+0000005e <main>:
+
+// ***********************************************************
+// Main program
+//
+int main(void)
+ {
+  5e:	df 93       	push	r29
+  60:	cf 93       	push	r28
+  62:	cd b7       	in	r28, 0x3d	; 61
+  64:	de b7       	in	r29, 0x3e	; 62
+
+  DDRB=(1<<MOSI)|(1<<SCK);
+  66:	e7 e3       	ldi	r30, 0x37	; 55
+  68:	f0 e0       	ldi	r31, 0x00	; 0
+  6a:	80 ea       	ldi	r24, 0xA0	; 160
+  6c:	80 83       	st	Z, r24
+  DDRC=0XFF;
+  6e:	e4 e3       	ldi	r30, 0x34	; 52
+  70:	f0 e0       	ldi	r31, 0x00	; 0
+  72:	8f ef       	ldi	r24, 0xFF	; 255
+  74:	80 83       	st	Z, r24
+  SPCR=(1<<SPE)|(1<<MSTR)|(1<<SPR0);
+  76:	ed e2       	ldi	r30, 0x2D	; 45
+  78:	f0 e0       	ldi	r31, 0x00	; 0
+  7a:	81 e5       	ldi	r24, 0x51	; 81
+  7c:	80 83       	st	Z, r24
+  while(1)
+  		{
+  		 SPDR='A';
+  7e:	ef e2       	ldi	r30, 0x2F	; 47
+  80:	f0 e0       	ldi	r31, 0x00	; 0
+  82:	81 e4       	ldi	r24, 0x41	; 65
+  84:	80 83       	st	Z, r24
+  		 while(!(SPSR&(1<<SPIF)));
+  86:	ee e2       	ldi	r30, 0x2E	; 46
+  88:	f0 e0       	ldi	r31, 0x00	; 0
+  8a:	80 81       	ld	r24, Z
+  8c:	88 23       	and	r24, r24
+  8e:	dc f7       	brge	.-10     	; 0x86 <main+0x28>
+  		 PORTC=SPDR;  		  		
+  90:	e5 e3       	ldi	r30, 0x35	; 53
+  92:	f0 e0       	ldi	r31, 0x00	; 0
+  94:	af e2       	ldi	r26, 0x2F	; 47
+  96:	b0 e0       	ldi	r27, 0x00	; 0
+  98:	8c 91       	ld	r24, X
+  9a:	80 83       	st	Z, r24
+  9c:	f0 cf       	rjmp	.-32     	; 0x7e <main+0x20>
+
+0000009e <_exit>:
+  9e:	f8 94       	cli
+
+000000a0 <__stop_program>:
+  a0:	ff cf       	rjmp	.-2      	; 0xa0 <__stop_program>

@@ -1,0 +1,211 @@
+   1               		.file	"q4.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_1
+  73               	__vector_1:
+   1:q4.c          **** // ***********************************************************
+   2:q4.c          **** // Project:
+   3:q4.c          **** // Author:
+   4:q4.c          **** // Module description:
+   5:q4.c          **** // ***********************************************************
+   6:q4.c          **** 
+   7:q4.c          **** #include <avr\io.h>              // Most basic include files
+   8:q4.c          **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:q4.c          **** #include <avr\signal.h>          // here
+  10:q4.c          **** 
+  11:q4.c          **** // Define here the global static variables
+  12:q4.c          **** //
+  13:q4.c          **** int My_global;
+  14:q4.c          **** 
+  15:q4.c          **** // Interrupt handler example for INT0
+  16:q4.c          **** //
+  17:q4.c          **** SIGNAL(SIG_INTERRUPT0) {
+  74               	7,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a DF93      		push r29
+  83 000c CF93      		push r28
+  84 000e CDB7      		in r28,__SP_L__
+  85 0010 DEB7      		in r29,__SP_H__
+  86               	/* prologue: Signal */
+  87               	/* frame size = 0 */
+  88               	/* epilogue start */
+  18:q4.c          **** 
+  19:q4.c          **** }
+  89               	,.LM1-.LFBB1
+  90               	.LM1:
+  91 0012 CF91      		pop r28
+  92 0014 DF91      		pop r29
+  93 0016 0F90      		pop r0
+  94 0018 0FBE      		out __SREG__,r0
+  95 001a 0F90      		pop r0
+  96 001c 1F90      		pop __zero_reg__
+  97 001e 1895      		reti
+  99               	.Lscope1:
+ 101               	.global	my_function
+ 103               	my_function:
+  20:q4.c          **** 
+  21:q4.c          **** // It is recommended to use this coding style to
+  22:q4.c          **** // follow better the mixed C-assembly code in the
+  23:q4.c          **** // Program Memory window
+  24:q4.c          **** //
+  25:q4.c          **** void my_function(void) {  // Put the open brace '{' here
+ 104               	,.LM2-.LFBB2
+ 105               	.LM2:
+ 106               	.LFBB2:
+ 107 0020 DF93      		push r29
+ 108 0022 CF93      		push r28
+ 109 0024 CDB7      		in r28,__SP_L__
+ 110 0026 DEB7      		in r29,__SP_H__
+ 111               	/* prologue: function */
+ 112               	/* frame size = 0 */
+  26:q4.c          **** 
+  27:q4.c          ****    asm("nop");          // Inline assembly example
+ 113               	8,0,27,.LM3-.LFBB2
+ 114               	.LM3:
+ 115               	/* #APP */
+ 116               	 ;  27 "q4.c" 1
+ 117 0028 0000      		nop
+ 118               	 ;  0 "" 2
+ 119               	/* epilogue start */
+  28:q4.c          **** }
+ 120               		68,0,28,.LM4-.LFBB2
+ 121               	.LM4:
+ 122               	/* #NOAPP */
+ 123 002a CF91      		pop r28
+ 124 002c DF91      		pop r29
+ 125 002e 0895      		ret
+ 127               	.Lscope2:
+ 129               	.global	main
+ 131               	main:
+  29:q4.c          **** 
+  30:q4.c          **** // ***********************************************************
+  31:q4.c          **** // Main program
+  32:q4.c          **** //
+  33:q4.c          **** int main(void)
+  34:q4.c          ****  {
+ 132               	,34,.LM5-.LFBB3
+ 133               	.LM5:
+ 134               	.LFBB3:
+ 135 0030 DF93      		push r29
+ 136 0032 CF93      		push r28
+ 137 0034 CDB7      		in r28,__SP_L__
+ 138 0036 DEB7      		in r29,__SP_H__
+ 139               	/* prologue: function */
+ 140               	/* frame size = 0 */
+  35:q4.c          **** 
+  36:q4.c          ****  DDRB=0XFF;
+ 141               	8,0,36,.LM6-.LFBB3
+ 142               	.LM6:
+ 143 0038 E7E3      		ldi r30,lo8(55)
+ 144 003a F0E0      		ldi r31,hi8(55)
+ 145 003c 8FEF      		ldi r24,lo8(-1)
+ 146 003e 8083      		st Z,r24
+  37:q4.c          ****  TCNT2=0;
+ 147               	n	68,0,37,.LM7-.LFBB3
+ 148               	.LM7:
+ 149 0040 E4E4      		ldi r30,lo8(68)
+ 150 0042 F0E0      		ldi r31,hi8(68)
+ 151 0044 1082      		st Z,__zero_reg__
+  38:q4.c          ****  OCR2=125;
+ 152               	bn	68,0,38,.LM8-.LFBB3
+ 153               	.LM8:
+ 154 0046 E3E4      		ldi r30,lo8(67)
+ 155 0048 F0E0      		ldi r31,hi8(67)
+ 156 004a 8DE7      		ldi r24,lo8(125)
+ 157 004c 8083      		st Z,r24
+  39:q4.c          ****  TIMSK|=(1<<OCIE2);
+ 158               	n	68,0,39,.LM9-.LFBB3
+ 159               	.LM9:
+ 160 004e A9E5      		ldi r26,lo8(89)
+ 161 0050 B0E0      		ldi r27,hi8(89)
+ 162 0052 E9E5      		ldi r30,lo8(89)
+ 163 0054 F0E0      		ldi r31,hi8(89)
+ 164 0056 8081      		ld r24,Z
+ 165 0058 8068      		ori r24,lo8(-128)
+ 166 005a 8C93      		st X,r24
+  40:q4.c          ****  sei();
+ 167               	8,0,40,.LM10-.LFBB3
+ 168               	.LM10:
+ 169               	/* #APP */
+ 170               	 ;  40 "q4.c" 1
+ 171 005c 7894      		sei
+ 172               	 ;  0 "" 2
+  41:q4.c          ****  TCCR2|=(1<<CS20)|(1<<WGM20)|(1<<COM20)|(1<<COM21)|(1<<WGM21);
+ 173               	n	68,0,41,.LM11-.LFBB3
+ 174               	.LM11:
+ 175               	/* #NOAPP */
+ 176 005e A5E4      		ldi r26,lo8(69)
+ 177 0060 B0E0      		ldi r27,hi8(69)
+ 178 0062 E5E4      		ldi r30,lo8(69)
+ 179 0064 F0E0      		ldi r31,hi8(69)
+ 180 0066 8081      		ld r24,Z
+ 181 0068 8967      		ori r24,lo8(121)
+ 182 006a 8C93      		st X,r24
+ 183               	.L6:
+ 184 006c 00C0      		rjmp .L6
+ 186               	.Lscope3:
+ 188               	.global	__vector_3
+ 190               	__vector_3:
+  42:q4.c          ****  while(1);
+  43:q4.c          **** 
+  44:q4.c          ****    }
+  45:q4.c          **** ISR(TIMER2_COMP_vect)
+  46:q4.c          **** {
+ 191               	M12-.LFBB4
+ 192               	.LM12:
+ 193               	.LFBB4:
+ 194 006e 1F92      		push __zero_reg__
+ 195 0070 0F92      		push r0
+ 196 0072 0FB6      		in r0,__SREG__
+ 197 0074 0F92      		push r0
+ 198 0076 1124      		clr __zero_reg__
+ 199 0078 DF93      		push r29
+ 200 007a CF93      		push r28
+ 201 007c CDB7      		in r28,__SP_L__
+ 202 007e DEB7      		in r29,__SP_H__
+ 203               	/* prologue: Signal */
+ 204               	/* frame size = 0 */
+ 205               	/* epilogue start */
+  47:q4.c          **** }
+ 206               	logue start */
+ 208 0080 CF91      	.LM13:
+ 209 0082 DF91      		pop r28
+ 210 0084 0F90      		pop r29
+ 211 0086 0FBE      		pop r0
+ 212 0088 0F90      		out __SREG__,r0
+ 213 008a 1F90      		pop r0
+ 214 008c 1895      		pop __zero_reg__
+ 215               		reti
+ 217               	.Lscope4:
+ 218               		.comm My_global,2,1
+DEFINED SYMBOLS
+                            *ABS*:00000000 q4.c
+C:\users\cdac1\Temp/ccECe0yM.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccECe0yM.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccECe0yM.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccECe0yM.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccECe0yM.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccECe0yM.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccECe0yM.s:73     .text:00000000 __vector_1
+C:\users\cdac1\Temp/ccECe0yM.s:103    .text:00000020 my_function
+C:\users\cdac1\Temp/ccECe0yM.s:131    .text:00000030 main
+C:\users\cdac1\Temp/ccECe0yM.s:190    .text:0000006e __vector_3
+                            *COM*:00000002 My_global
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

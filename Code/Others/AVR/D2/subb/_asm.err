@@ -1,0 +1,17 @@
+Creating   'subb.eep'
+Creating   'subb.hex'
+Creating   'subb.obj'
+Creating   'subb.lis'
+Creating   'subb.map'
+
+Assembling 'subb.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   25 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   25 words
+
+Assembly complete with no errors.
+Deleting   'subb.eep'

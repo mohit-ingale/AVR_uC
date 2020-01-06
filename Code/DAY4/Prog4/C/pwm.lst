@@ -1,0 +1,126 @@
+   1               		.file	"pwm.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_3
+  73               	__vector_3:
+   1:pwm.c         **** // ***********************************************************
+   2:pwm.c         **** // Project:
+   3:pwm.c         **** // Author:
+   4:pwm.c         **** // Module description:
+   5:pwm.c         **** // ***********************************************************
+   6:pwm.c         **** 
+   7:pwm.c         **** #include <avr\io.h>              // Most basic include files
+   8:pwm.c         **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:pwm.c         **** #include <avr\signal.h>          // here
+  10:pwm.c         **** ISR(TIMER2_COMP_vect)
+  11:pwm.c         **** {
+  74               	1,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a DF93      		push r29
+  83 000c CF93      		push r28
+  84 000e CDB7      		in r28,__SP_L__
+  85 0010 DEB7      		in r29,__SP_H__
+  86               	/* prologue: Signal */
+  87               	/* frame size = 0 */
+  88               	/* epilogue start */
+  12:pwm.c         **** 	
+  13:pwm.c         **** }
+  89               	,.LM1-.LFBB1
+  90               	.LM1:
+  91 0012 CF91      		pop r28
+  92 0014 DF91      		pop r29
+  93 0016 0F90      		pop r0
+  94 0018 0FBE      		out __SREG__,r0
+  95 001a 0F90      		pop r0
+  96 001c 1F90      		pop __zero_reg__
+  97 001e 1895      		reti
+  99               	.Lscope1:
+ 101               	.global	main
+ 103               	main:
+  14:pwm.c         **** 
+  15:pwm.c         **** int main(void) {
+ 104               	,.LM2-.LFBB2
+ 105               	.LM2:
+ 106               	.LFBB2:
+ 107 0020 DF93      		push r29
+ 108 0022 CF93      		push r28
+ 109 0024 CDB7      		in r28,__SP_L__
+ 110 0026 DEB7      		in r29,__SP_H__
+ 111               	/* prologue: function */
+ 112               	/* frame size = 0 */
+  16:pwm.c         **** 	DDRB=0XFF;
+ 113               	8,0,16,.LM3-.LFBB2
+ 114               	.LM3:
+ 115 0028 E7E3      		ldi r30,lo8(55)
+ 116 002a F0E0      		ldi r31,hi8(55)
+ 117 002c 8FEF      		ldi r24,lo8(-1)
+ 118 002e 8083      		st Z,r24
+  17:pwm.c         **** 	TCNT2=0;
+ 119               	n	68,0,17,.LM4-.LFBB2
+ 120               	.LM4:
+ 121 0030 E4E4      		ldi r30,lo8(68)
+ 122 0032 F0E0      		ldi r31,hi8(68)
+ 123 0034 1082      		st Z,__zero_reg__
+  18:pwm.c         **** 	OCR2=128;
+ 124               	bn	68,0,18,.LM5-.LFBB2
+ 125               	.LM5:
+ 126 0036 E3E4      		ldi r30,lo8(67)
+ 127 0038 F0E0      		ldi r31,hi8(67)
+ 128 003a 80E8      		ldi r24,lo8(-128)
+ 129 003c 8083      		st Z,r24
+  19:pwm.c         **** 	TIMSK=(1<<OCIE2);
+ 130               	ldi r24,lo8(-128)
+ 131               		st Z,r24
+ 133 0040 F0E0      	.LM6:
+ 134 0042 80E8      		ldi r30,lo8(89)
+ 135 0044 8083      		ldi r31,hi8(89)
+  20:pwm.c         **** 	sei();
+ 136               	o8(89)
+ 137               		ldi r31,hi8(89)
+ 138               		ldi r24,lo8(-128)
+ 139               		st Z,r24
+ 141               	.LM7:
+  21:pwm.c         **** 	TCCR2|=(1<<WGM20)|(1<<WGM21)|(1<<CS20)|(1<<CS21)|(1<<COM21)|(1<<COM20);
+ 142               	0,.LM7-.LFBB2
+ 143               	.LM7:
+ 144               	/* #APP */
+ 145 0048 A5E4      	 ;  20 "pwm.c" 1
+ 146 004a B0E0      		sei
+ 147 004c E5E4      	 ;  0 "" 2
+ 149 0050 8081      	.LM8:
+ 150 0052 8B67      	/* #NOAPP */
+ 151 0054 8C93      		ldi r26,lo8(69)
+ 152               		ldi r27,hi8(69)
+ 153 0056 00C0      		ldi r30,lo8(69)
+ 154               		ldi r31,hi8(69)
+ 155               		ld r24,Z
+ 156               		ori r24,lo8(123)
+ 157               		st X,r24
+DEFINED SYMBOLS
+                            *ABS*:00000000 pwm.c
+C:\users\cdac1\Temp/cc7B4KFh.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/cc7B4KFh.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/cc7B4KFh.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/cc7B4KFh.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/cc7B4KFh.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/cc7B4KFh.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/cc7B4KFh.s:73     .text:00000000 __vector_3
+C:\users\cdac1\Temp/cc7B4KFh.s:103    .text:00000020 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

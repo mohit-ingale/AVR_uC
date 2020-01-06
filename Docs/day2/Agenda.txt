@@ -1,0 +1,15 @@
+
+1  Brief history of AVr 
+2  Device and family overview 
+3  Features of AVR atmega8 controller 
+4  Discuss the architecture of the avr 
+5  Organisation of the flash memory and SRAM memory inside the atmega8 controller 
+6  Description of the register inside the atmega8 controller including 
+	PC ,
+	Stack Pointer [cover types of stack that are present Full ascending, Full descending 
+			Empty Ascending , Empty Descending ]
+	General purpose registers
+	 X Y Z register 
+7 Basic instructions of the microcontroller  add subtract.	
+8 compilation, debugging and simulation  of avr assembly program. 
+ 

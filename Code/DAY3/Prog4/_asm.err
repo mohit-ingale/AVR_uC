@@ -1,0 +1,17 @@
+Creating   'ledblink.eep'
+Creating   'ledblink.hex'
+Creating   'ledblink.obj'
+Creating   'ledblink.lis'
+Creating   'ledblink.map'
+
+Assembling 'ledblink.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   52 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   52 words
+
+Assembly complete with no errors.
+Deleting   'ledblink.eep'

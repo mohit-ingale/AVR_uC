@@ -1,0 +1,73 @@
+set -e; avr-gcc -MM -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=delay.lst   delay.c \
+	| sed 's,\(.*\)\.o[ :]*,\1.o \1.d : ,g' > delay.d; \
+	[ -s delay.d ] || rm -f delay.d
+
+-------- begin --------
+avr-gcc (WinAVR 20080610) 4.3.0
+Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+Size before:
+delay.elf  :
+section    size      addr
+.text       306         0
+.bss          2   8388704
+.stab      1056         0
+.stabstr   1656         0
+Total      3020
+
+
+
+
+Compiling: delay.c
+avr-gcc -c -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=delay.lst   delay.c -o delay.o
+In file included from delay.c:9:
+c:/winavr/lib/gcc/../../avr/include/avr\signal.h:36:2: warning: #warning "This header file is obsolete.  Use <avr/interrupt.h>."
+
+Linking: delay.elf
+avr-gcc -mmcu=atmega8 -I. -O0 -gstabs -std=gnu99  -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums  -Wall -Wstrict-prototypes  -Wa,-adhlns=delay.o   delay.o  --output delay.elf -lm -Wl,-Map=delay.map -Wl,--cref
+
+Creating load file for Flash: delay.hex
+avr-objcopy -O ihex -R .eeprom delay.elf delay.hex
+
+Creating load file for EEPROM: delay.eep
+avr-objcopy -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	--change-section-lma .eeprom=0 -O ihex delay.elf delay.eep
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom=0x00000000 never used
+
+Creating Extended Listing: delay.lss
+avr-objdump -h -S delay.elf > delay.lss
+
+Creating Symbol Table: delay.sym
+avr-nm -n delay.elf > delay.sym
+
+Converting to AVR COFF: delay.cof
+avr-objcopy --debugging --change-section-address .data-0x800000 --change-section-address .bss-0x800000 --change-section-address .noinit-0x800000 --change-section-address .eeprom-0x810000 -O coff-ext-avr delay.elf delay.cof   # Extended COFF. Supported in VMLAB from rel. 3.10
+Discarding local symbol outside any compilation unit: .do_copy_data_start
+Discarding local symbol outside any compilation unit: .do_copy_data_loop
+Discarding local symbol outside any compilation unit: .do_clear_bss_start
+Discarding local symbol outside any compilation unit: .do_clear_bss_loop
+Warning: no "data" section found in output file
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .eeprom+0xff7f0000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .noinit+0xff800000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .noinit+0xff800000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-vma .data+0xff800000 never used
+c:\winavr\bin\avr-objcopy.exe: --change-section-lma .data+0xff800000 never used
+
+Size after:
+delay.elf  :
+section    size      addr
+.text       306         0
+.bss          2   8388704
+.stab      1056         0
+.stabstr   1656         0
+Total      3020
+
+
+
+Errors: none
+-------- end --------
+

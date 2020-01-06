@@ -1,0 +1,17 @@
+Creating   'q1.eep'
+Creating   'q1.hex'
+Creating   'q1.obj'
+Creating   'q1.lis'
+Creating   'q1.map'
+
+Assembling 'q1.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   55 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   55 words
+
+Assembly complete with no errors.
+Deleting   'q1.eep'

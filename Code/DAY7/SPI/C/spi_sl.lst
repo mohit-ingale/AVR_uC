@@ -1,0 +1,137 @@
+   1               		.file	"spi_sl.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  68               	.global	__vector_17
+  70               	__vector_17:
+   1:spi_sl.c      **** // ***********************************************************
+   2:spi_sl.c      **** // Project:
+   3:spi_sl.c      **** // Author:
+   4:spi_sl.c      **** // Module description:
+   5:spi_sl.c      **** // ***********************************************************
+   6:spi_sl.c      **** 
+   7:spi_sl.c      **** #include <avr\io.h>              // Most basic include files
+   8:spi_sl.c      **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:spi_sl.c      **** #include <avr\signal.h>          // here
+  10:spi_sl.c      **** 
+  11:spi_sl.c      **** ISR(SPI_STC_vect)
+  12:spi_sl.c      **** {
+  71               		in r0,__SREG__
+  72               		push r0
+  73               		clr __zero_reg__
+  74 0000 1F92      		push r24
+  75 0002 0F92      		push r26
+  76 0004 0FB6      		push r27
+  77 0006 0F92      		push r30
+  78 0008 1124      		push r31
+  79 000a 8F93      		push r29
+  80 000c AF93      		push r28
+  81 000e BF93      		in r28,__SP_L__
+  82 0010 EF93      		in r29,__SP_H__
+  83 0012 FF93      	/* prologue: Signal */
+  84 0014 DF93      	/* frame size = 0 */
+  86 0018 CDB7      	.LM1:
+  87 001a DEB7      		ldi r30,lo8(43)
+  88               		ldi r31,hi8(43)
+  89               		ldi r26,lo8(78)
+  13:spi_sl.c      **** 	PORTD=SPDR;
+  90               	,13,.LM1-.LFBB1
+  91               	.LM1:
+  92 001c EBE2      		ldi r30,lo8(43)
+  93 001e F0E0      		ldi r31,hi8(43)
+  94 0020 AEE4      		ldi r26,lo8(78)
+  95 0022 B0E0      		ldi r27,hi8(78)
+  96 0024 8C91      		ld r24,X
+  97 0026 8083      		st Z,r24
+  98               	/* epilogue start */
+  14:spi_sl.c      **** //	SPDR=7;
+  15:spi_sl.c      **** }
+  99               	26,lo8(78)
+ 100               		ldi r27,hi8(78)
+ 101 0028 CF91      		ld r24,X
+ 102 002a DF91      		st Z,r24
+ 103 002c FF91      	/* epilogue start */
+ 105 0030 BF91      	.LM2:
+ 106 0032 AF91      		pop r28
+ 107 0034 8F91      		pop r29
+ 108 0036 0F90      		pop r31
+ 109 0038 0FBE      		pop r30
+ 110 003a 0F90      		pop r27
+ 111 003c 1F90      		pop r26
+ 112 003e 1895      		pop r24
+ 113               		pop r0
+ 114               		out __SREG__,r0
+ 115               		pop r0
+ 116               		pop __zero_reg__
+ 117               		reti
+  16:spi_sl.c      **** 
+  17:spi_sl.c      **** int main(void)
+  18:spi_sl.c      **** {
+ 119               	 __zero_reg__
+ 120               		reti
+ 122 0040 DF93      	.Lscope1:
+ 124 0044 CDB7      	.global	main
+ 126               	main:
+  19:spi_sl.c      **** 	DDRD=0xFF;
+ 128               	in, @function
+ 129               	main:
+ 131 004a F0E0      	.LM3:
+ 132 004c 8FEF      	.LFBB2:
+ 133 004e 8083      		push r29
+  20:spi_sl.c      **** 	DDRB=(1<<PB4);
+ 134               		68,0,18,.LM3-.LFBB2
+ 135               	.LM3:
+ 136 0050 E4E2      	.LFBB2:
+ 137 0052 F0E0      		push r29
+ 138 0054 80E1      		push r28
+ 139 0056 8083      		in r28,__SP_L__
+  21:spi_sl.c      **** //	PORTB&=~(1<<PB2);
+  22:spi_sl.c      **** 	//PORTB|=(1<<PB3)|(1<<PB5);
+  23:spi_sl.c      **** 	SPCR|=(1<<SPIE)|(1<<SPE);
+ 140               	FBB2:
+ 141               		push r29
+ 142 0058 ACE4      		push r28
+ 143 005a B0E0      		in r28,__SP_L__
+ 144 005c ECE4      		in r29,__SP_H__
+ 145 005e F0E0      	/* prologue: function */
+ 146 0060 8081      	/* frame size = 0 */
+ 148 0064 8C93      	.LM4:
+  24:spi_sl.c      **** 	SPDR=7;
+ 149               	 */
+ 151 0066 EEE4      	.LM4:
+ 152 0068 F0E0      		ldi r30,lo8(42)
+ 153 006a 87E0      		ldi r31,hi8(42)
+ 154 006c 8083      		ldi r24,lo8(-1)
+  25:spi_sl.c      **** 	sei();
+ 155               	
+ 156               		ldi r31,hi8(42)
+ 157               		ldi r24,lo8(-1)
+ 158               		st Z,r24
+ 160               	.LM5:
+ 161               		ldi r30,lo8(36)
+ 162               		ldi r31,hi8(36)
+ 163 0070 00C0      		ldi r24,lo8(16)
+ 164               		st Z,r24
+ 166               	.LM6:
+ 167               		ldi r26,lo8(76)
+DEFINED SYMBOLS
+                            *ABS*:00000000 spi_sl.c
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:2      *ABS*:0000003f __SREG__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:5      *ABS*:00000034 __CCP__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:70     .text:00000000 __vector_17
+C:\Users\Mohit\AppData\Local\Temp/ccO2bJZF.s:118    .text:00000040 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

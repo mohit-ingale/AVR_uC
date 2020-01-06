@@ -1,0 +1,17 @@
+Creating   'extint.eep'
+Creating   'extint.hex'
+Creating   'extint.obj'
+Creating   'extint.lis'
+Creating   'extint.map'
+
+Assembling 'extint.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+
+Program memory usage:
+Code             :   64 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :   64 words
+
+Assembly complete with no errors.
+Deleting   'extint.eep'

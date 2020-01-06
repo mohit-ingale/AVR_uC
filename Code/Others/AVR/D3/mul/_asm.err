@@ -1,0 +1,15 @@
+Creating   'mul.eep'
+Creating   'mul.hex'
+Creating   'mul.obj'
+Creating   'mul.lis'
+Creating   'mul.map'
+
+Assembling 'mul.asm'
+Including  'C:\VMLAB\include\m8def.inc'
+mul.asm(38) : 
+Assembly complete with 1 error
+
+Deleting   'mul.eep'
+Deleting   'mul.obj'
+Deleting   'mul.hex'
+Deleting   'mul.map'

@@ -1,0 +1,325 @@
+   1               		.file	"uart.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  71               	.global	__vector_11
+  73               	__vector_11:
+   1:uart.c        **** // ***********************************************************
+   2:uart.c        **** // Project:
+   3:uart.c        **** // Author:
+   4:uart.c        **** // Module description:
+   5:uart.c        **** // ***********************************************************
+   6:uart.c        **** 
+   7:uart.c        **** #include <avr\io.h>              // Most basic include files
+   8:uart.c        **** #include <avr\interrupt.h>       // Add the necessary ones
+   9:uart.c        **** #include <avr\signal.h>          // here
+  10:uart.c        **** 
+  11:uart.c        **** unsigned char ch;
+  12:uart.c        **** volatile int FLAG,FLAG1;
+  13:uart.c        **** 
+  14:uart.c        **** void transmit(void);
+  15:uart.c        **** void init_uart(void);
+  16:uart.c        **** 
+  17:uart.c        **** ISR(USART_RXC_vect)
+  18:uart.c        **** {
+  74               	8,.LM0-.LFBB1
+  75               	.LM0:
+  76               	.LFBB1:
+  77 0000 1F92      		push __zero_reg__
+  78 0002 0F92      		push r0
+  79 0004 0FB6      		in r0,__SREG__
+  80 0006 0F92      		push r0
+  81 0008 1124      		clr __zero_reg__
+  82 000a 8F93      		push r24
+  83 000c 9F93      		push r25
+  84 000e EF93      		push r30
+  85 0010 FF93      		push r31
+  86 0012 DF93      		push r29
+  87 0014 CF93      		push r28
+  88 0016 CDB7      		in r28,__SP_L__
+  89 0018 DEB7      		in r29,__SP_H__
+  90               	/* prologue: Signal */
+  91               	/* frame size = 0 */
+  19:uart.c        **** 	ch=UDR;
+  92               	M1-.LFBB1
+  93               	.LM1:
+  94 001a ECE2      		ldi r30,lo8(44)
+  95 001c F0E0      		ldi r31,hi8(44)
+  96 001e 8081      		ld r24,Z
+  97 0020 8093 0000 		sts ch,r24
+  20:uart.c        **** 	FLAG1=1;	
+  98               	n	68,0,20,.LM2-.LFBB1
+  99               	.LM2:
+ 100 0024 81E0      		ldi r24,lo8(1)
+ 101 0026 90E0      		ldi r25,hi8(1)
+ 102 0028 9093 0000 		sts (FLAG1)+1,r25
+ 103 002c 8093 0000 		sts FLAG1,r24
+ 104               	/* epilogue start */
+  21:uart.c        **** }
+ 105               		68,0,21,.LM3-.LFBB1
+ 106               	.LM3:
+ 107 0030 CF91      		pop r28
+ 108 0032 DF91      		pop r29
+ 109 0034 FF91      		pop r31
+ 110 0036 EF91      		pop r30
+ 111 0038 9F91      		pop r25
+ 112 003a 8F91      		pop r24
+ 113 003c 0F90      		pop r0
+ 114 003e 0FBE      		out __SREG__,r0
+ 115 0040 0F90      		pop r0
+ 116 0042 1F90      		pop __zero_reg__
+ 117 0044 1895      		reti
+ 119               	.Lscope1:
+ 121               	.global	__vector_13
+ 123               	__vector_13:
+  22:uart.c        **** 
+  23:uart.c        **** ISR(USART_TXC_vect)
+  24:uart.c        **** {
+ 124               	4-.LFBB2
+ 125               	.LM4:
+ 126               	.LFBB2:
+ 127 0046 1F92      		push __zero_reg__
+ 128 0048 0F92      		push r0
+ 129 004a 0FB6      		in r0,__SREG__
+ 130 004c 0F92      		push r0
+ 131 004e 1124      		clr __zero_reg__
+ 132 0050 DF93      		push r29
+ 133 0052 CF93      		push r28
+ 134 0054 CDB7      		in r28,__SP_L__
+ 135 0056 DEB7      		in r29,__SP_H__
+ 136               	/* prologue: Signal */
+ 137               	/* frame size = 0 */
+  25:uart.c        ****    FLAG=0;
+ 138               	5,.LM5-.LFBB2
+ 139               	.LM5:
+ 140 0058 1092 0000 		sts (FLAG)+1,__zero_reg__
+ 141 005c 1092 0000 		sts FLAG,__zero_reg__
+ 142               	/* epilogue start */
+  26:uart.c        **** }
+ 143               	bn	68,0,26,.LM6-.LFBB2
+ 144               	.LM6:
+ 145 0060 CF91      		pop r28
+ 146 0062 DF91      		pop r29
+ 147 0064 0F90      		pop r0
+ 148 0066 0FBE      		out __SREG__,r0
+ 149 0068 0F90      		pop r0
+ 150 006a 1F90      		pop __zero_reg__
+ 151 006c 1895      		reti
+ 153               	.Lscope2:
+ 155               	.global	__vector_12
+ 157               	__vector_12:
+  27:uart.c        **** 
+  28:uart.c        **** ISR(USART_UDRE_vect)
+  29:uart.c        **** {
+ 158               	,.LM7-.LFBB3
+ 159               	.LM7:
+ 160               	.LFBB3:
+ 161 006e 1F92      		push __zero_reg__
+ 162 0070 0F92      		push r0
+ 163 0072 0FB6      		in r0,__SREG__
+ 164 0074 0F92      		push r0
+ 165 0076 1124      		clr __zero_reg__
+ 166 0078 DF93      		push r29
+ 167 007a CF93      		push r28
+ 168 007c CDB7      		in r28,__SP_L__
+ 169 007e DEB7      		in r29,__SP_H__
+ 170               	/* prologue: Signal */
+ 171               	/* frame size = 0 */
+  30:uart.c        **** 	FLAG=0;
+ 172               	0,.LM8-.LFBB3
+ 173               	.LM8:
+ 174 0080 1092 0000 		sts (FLAG)+1,__zero_reg__
+ 175 0084 1092 0000 		sts FLAG,__zero_reg__
+ 176               	/* epilogue start */
+  31:uart.c        **** }
+ 177               	bn	68,0,31,.LM9-.LFBB3
+ 178               	.LM9:
+ 179 0088 CF91      		pop r28
+ 180 008a DF91      		pop r29
+ 181 008c 0F90      		pop r0
+ 182 008e 0FBE      		out __SREG__,r0
+ 183 0090 0F90      		pop r0
+ 184 0092 1F90      		pop __zero_reg__
+ 185 0094 1895      		reti
+ 187               	.Lscope3:
+ 189               	.global	main
+ 191               	main:
+  32:uart.c        **** 
+  33:uart.c        **** int main(void)
+  34:uart.c        **** {
+ 192               	,.LM10-.LFBB4
+ 193               	.LM10:
+ 194               	.LFBB4:
+ 195 0096 DF93      		push r29
+ 196 0098 CF93      		push r28
+ 197 009a CDB7      		in r28,__SP_L__
+ 198 009c DEB7      		in r29,__SP_H__
+ 199               	/* prologue: function */
+ 200               	/* frame size = 0 */
+  35:uart.c        **** 	init_uart();
+ 201               	8,0,35,.LM11-.LFBB4
+ 202               	.LM11:
+ 203 009e 00D0      		rcall init_uart
+  36:uart.c        **** 	sei();	
+ 204               	tabn	68,0,36,.LM12-.LFBB4
+ 205               	.LM12:
+ 206               	/* #APP */
+ 207               	 ;  36 "uart.c" 1
+ 208 00a0 7894      		sei
+ 209               	 ;  0 "" 2
+ 210               	/* #NOAPP */
+ 211               	.L9:
+  37:uart.c        **** 
+  38:uart.c        ****    while(1)
+  39:uart.c        ****    {
+  40:uart.c        ****    	if(FLAG1)
+ 212               	68,0,40,.LM13-.LFBB4
+ 213               	.LM13:
+ 214 00a2 8091 0000 		lds r24,FLAG1
+ 215 00a6 9091 0000 		lds r25,(FLAG1)+1
+ 216 00aa 0097      		sbiw r24,0
+ 217 00ac 01F0      		breq .L9
+  41:uart.c        ****    		transmit();
+ 218               	n	68,0,41,.LM14-.LFBB4
+ 219               	.LM14:
+ 220 00ae 00D0      		rcall transmit
+ 221 00b0 00C0      		rjmp .L9
+ 223               	.Lscope4:
+ 225               	.global	init_uart
+ 227               	init_uart:
+  42:uart.c        ****    }
+  43:uart.c        **** 
+  44:uart.c        **** }
+  45:uart.c        **** 
+  46:uart.c        **** void init_uart(void)
+  47:uart.c        **** {    UBRRL=0X33;
+ 228               	,0,47,.LM15-.LFBB5
+ 229               	.LM15:
+ 230               	.LFBB5:
+ 231 00b2 DF93      		push r29
+ 232 00b4 CF93      		push r28
+ 233 00b6 CDB7      		in r28,__SP_L__
+ 234 00b8 DEB7      		in r29,__SP_H__
+ 235               	/* prologue: function */
+ 236               	/* frame size = 0 */
+ 238               	.LM16:
+ 239 00ba E9E2      		ldi r30,lo8(41)
+ 240 00bc F0E0      		ldi r31,hi8(41)
+ 241 00be 83E3      		ldi r24,lo8(51)
+ 242 00c0 8083      		st Z,r24
+  48:uart.c        **** 	UCSRB|=(1<<RXEN)|(1<<TXEN)|(1<<RXCIE)|(1<<TXCIE)|(1<<UDRIE);
+ 243               	,.LM17-.LFBB5
+ 244               	.LM17:
+ 245 00c2 AAE2      		ldi r26,lo8(42)
+ 246 00c4 B0E0      		ldi r27,hi8(42)
+ 247 00c6 EAE2      		ldi r30,lo8(42)
+ 248 00c8 F0E0      		ldi r31,hi8(42)
+ 249 00ca 8081      		ld r24,Z
+ 250 00cc 886F      		ori r24,lo8(-8)
+ 251 00ce 8C93      		st X,r24
+  49:uart.c        **** 	UCSRC|=(1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
+ 252               	8,0,49,.LM18-.LFBB5
+ 253               	.LM18:
+ 254 00d0 A0E4      		ldi r26,lo8(64)
+ 255 00d2 B0E0      		ldi r27,hi8(64)
+ 256 00d4 E0E4      		ldi r30,lo8(64)
+ 257 00d6 F0E0      		ldi r31,hi8(64)
+ 258 00d8 8081      		ld r24,Z
+ 259 00da 8668      		ori r24,lo8(-122)
+ 260 00dc 8C93      		st X,r24
+ 261               	/* epilogue start */
+  50:uart.c        **** 	
+  51:uart.c        **** }
+ 262               	,0,51,.LM19-.LFBB5
+ 263               	.LM19:
+ 264 00de CF91      		pop r28
+ 265 00e0 DF91      		pop r29
+ 266 00e2 0895      		ret
+ 268               	.Lscope5:
+ 270               	.global	transmit
+ 272               	transmit:
+  52:uart.c        **** 
+  53:uart.c        **** void transmit(void)
+  54:uart.c        **** {
+ 273               	0,54,.LM20-.LFBB6
+ 274               	.LM20:
+ 275               	.LFBB6:
+ 276 00e4 DF93      		push r29
+ 277 00e6 CF93      		push r28
+ 278 00e8 CDB7      		in r28,__SP_L__
+ 279 00ea DEB7      		in r29,__SP_H__
+ 280               	/* prologue: function */
+ 281               	/* frame size = 0 */
+  55:uart.c        **** 	FLAG=1;
+ 282               	8,0,55,.LM21-.LFBB6
+ 283               	.LM21:
+ 284 00ec 81E0      		ldi r24,lo8(1)
+ 285 00ee 90E0      		ldi r25,hi8(1)
+ 286 00f0 9093 0000 		sts (FLAG)+1,r25
+ 287 00f4 8093 0000 		sts FLAG,r24
+  56:uart.c        **** 	ch=ch+1;
+ 288               	n	68,0,56,.LM22-.LFBB6
+ 289               	.LM22:
+ 290 00f8 8091 0000 		lds r24,ch
+ 291 00fc 8F5F      		subi r24,lo8(-(1))
+ 292 00fe 8093 0000 		sts ch,r24
+  57:uart.c        **** 	UDR=ch;
+ 293               	bn	68,0,57,.LM23-.LFBB6
+ 294               	.LM23:
+ 295 0102 ECE2      		ldi r30,lo8(44)
+ 296 0104 F0E0      		ldi r31,hi8(44)
+ 297 0106 8091 0000 		lds r24,ch
+ 298 010a 8083      		st Z,r24
+ 299               	.L14:
+  58:uart.c        **** 	while(FLAG);
+ 300               		68,0,58,.LM24-.LFBB6
+ 301               	.LM24:
+ 302 010c 8091 0000 		lds r24,FLAG
+ 303 0110 9091 0000 		lds r25,(FLAG)+1
+ 304 0114 0097      		sbiw r24,0
+ 305 0116 01F4      		brne .L14
+  59:uart.c        **** 	FLAG1=0;	
+ 306               	iw r24,0
+ 307               		brne .L14
+ 309 011c 1092 0000 	.LM25:
+ 310               		sts (FLAG1)+1,__zero_reg__
+  60:uart.c        **** }
+ 311               	)+1,__zero_reg__
+ 312               		sts FLAG1,__zero_reg__
+ 313 0120 CF91      	/* epilogue start */
+ 315 0124 0895      	.LM26:
+ 316               		pop r28
+ 317               		pop r29
+ 318               		ret
+ 320               	.Lscope6:
+ 321               		.comm ch,1,1
+ 322               		.comm FLAG,2,1
+ 323               		.comm FLAG1,2,1
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart.c
+C:\users\cdac1\Temp/ccsMeC8j.s:2      *ABS*:0000003f __SREG__
+C:\users\cdac1\Temp/ccsMeC8j.s:3      *ABS*:0000003e __SP_H__
+C:\users\cdac1\Temp/ccsMeC8j.s:4      *ABS*:0000003d __SP_L__
+C:\users\cdac1\Temp/ccsMeC8j.s:5      *ABS*:00000034 __CCP__
+C:\users\cdac1\Temp/ccsMeC8j.s:6      *ABS*:00000000 __tmp_reg__
+C:\users\cdac1\Temp/ccsMeC8j.s:7      *ABS*:00000001 __zero_reg__
+C:\users\cdac1\Temp/ccsMeC8j.s:73     .text:00000000 __vector_11
+                            *COM*:00000001 ch
+                            *COM*:00000002 FLAG1
+C:\users\cdac1\Temp/ccsMeC8j.s:123    .text:00000046 __vector_13
+                            *COM*:00000002 FLAG
+C:\users\cdac1\Temp/ccsMeC8j.s:157    .text:0000006e __vector_12
+C:\users\cdac1\Temp/ccsMeC8j.s:191    .text:00000096 main
+C:\users\cdac1\Temp/ccsMeC8j.s:227    .text:000000b2 init_uart
+C:\users\cdac1\Temp/ccsMeC8j.s:272    .text:000000e4 transmit
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
